@@ -1,0 +1,22 @@
+.routine_header_card, .exercise_header_card {
+    border-style: solid;
+    border-radius: 100px;
+    border-color: lightblue;
+}
+
+button {
+    color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+}
+
+button:hover {
+    border: 1px #C6C6C6 solid;
+    box-shadow: 1px 1px 1px #EAEAEA;
+    color: #333333;
+    background: #F7F7F7;
+}
+
+button:active {
+    box-shadow: inset 1px 1px 1px #DFDFDF;   
+}

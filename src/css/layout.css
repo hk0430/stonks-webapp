@@ -1,0 +1,175 @@
+@font-face {
+    font-family: 'Lexend Exa';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Lexend Exa Regular'), local('LexendExa-Regular'), url('./fonts/Lexend Exa/UMBXrPdOoHOnxExyjdBeaiLdA4M5.woff2') format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+  
+/* latin-ext */
+@font-face {
+    font-family: 'Lexend Exa';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Lexend Exa Regular'), local('LexendExa-Regular'), url('./fonts/Lexend Exa/UMBXrPdOoHOnxExyjdBeaiPdA4M5.woff2') format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+  
+/* latin */
+@font-face {
+    font-family: 'Lexend Exa';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Lexend Exa Regular'), local('LexendExa-Regular'), url('./fonts/Lexend Exa/UMBXrPdOoHOnxExyjdBeai3dAw.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+  
+body {
+    background-color: var(--swatch-foundation);
+    font-family: 'Lexend Exa';
+}
+
+.form-container {
+    /* centering the form */
+    display: block;
+    text-align: center;
+
+    margin-top: 5%;
+}
+
+.form {
+    /* centering the form */
+    width: 30%;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.routine_header_card, .exercise_header_card {
+    position: relative;
+    height: 58px;
+    grid-row-gap: 0px;
+    grid-column-gap: 50px;
+    margin-top: 3%;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.routine_name_header, .routine_created_header, .routine_last_mod_header, .exercise_task_header, .exercise_group_header, .exercise_reps_header {
+    position: absolute;
+    top: 12%;
+    font-size: 180%;
+}
+
+.routine_name_header {
+    left: 4%;
+}
+
+.routine_created_header {
+    left: 45%;
+}
+
+.routine_last_mod_header {
+    left: 65%;
+}
+
+.routine_list_card {
+    position: relative;
+    height: 60px;
+    grid-row-gap: 0px;
+    grid-column-gap: 50px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.routine_list_name, .routine_list_created, .routine_list_timestamp, .routine_list_delete {
+    position: absolute;
+    left: 2%;
+    top: 10%;
+    font-size: 125%;
+}
+
+.routine_list_name {
+    left: 4.5%;
+}
+
+.routine_list_created {
+    left: 45%;
+}
+
+.routine_list_timestamp {
+    left: 65%;
+}
+
+.routine_list_delete {
+    left: 95%;
+    font-size: 200%;
+}
+
+.exercise_task_header {
+    left: 4%;
+}
+
+.exercise_group_header {
+    left: 40%;
+}
+
+.exercise_reps_header {
+    left: 75%;
+}
+
+.exercise_name, .exercise_group, .exercise_reps, .exercise_edits {
+    position: absolute;
+    left: 2%;
+    top: 10%;
+    font-size: 125%;
+}
+
+.exercise_name {
+    left: 4.5%;
+}
+
+.exercise_group {
+    left: 40%;
+}
+
+.exercise_reps {
+    left: 75%;
+}
+
+.exercise_edits {
+    left: 88%;
+    font-size: 160%;
+    cursor: pointer;
+}
+
+.new_button_container {
+    text-align: center;
+}
+
+button {
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 10pt;
+    outline: none;
+}
+
+.routine_name_container {
+    margin-top: 2%;
+}
+
+.exercise_card_btn_wrapper {
+    position: absolute;
+    top: 140%;
+    left: 80%;
+}
+
+.card:hover {
+    background-color: rgb(243, 237, 237);
+}
