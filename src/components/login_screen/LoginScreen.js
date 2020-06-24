@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 
 import { loginHandler } from '../../store/asynchHandler';
-import { APP_SCREEN } from '../../store/CONSTANTS';
+import { APP_SCREEN } from '../../store/constants';
 import { updateScreen } from '../../store/actionCreators';
 
 class LoginScreen extends Component {

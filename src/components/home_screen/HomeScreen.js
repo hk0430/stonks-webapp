@@ -4,22 +4,14 @@ import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
 
-import { APP_SCREEN } from '../../store/CONSTANTS';
+import { APP_SCREEN } from '../../store/constants';
 import { updateScreen } from '../../store/actionCreators';
-import { fetchUserInfo, fetchNewsfeed } from '../../store/asynchHandler';
+import { fetchUserInfo } from '../../store/asynchHandler';
 
 class HomeScreen extends Component {
-    state = {
-        haveNews: true
-    }
-
     componentDidMount = () => {
         this.props.fetchUserInfo(this.props.auth.uid);
         this.props.updateScreen(APP_SCREEN.LOGIN_SCREEN);
-        this.props.fetchNewsfeed(this.props.auth.uid, this.props.username);
-        if(this.props.newsfeed.length === 0) {
-            this.setState({ haveNews: false });
-        }
     }
 
     render() {
@@ -28,13 +20,9 @@ class HomeScreen extends Component {
         }
 
         return (
-            /*
             <div className="dashboard container">
-                <h4>Welcome, { this.props.username }. See what others are doing:</h4>
-                <NewsfeedLinks newsfeed={this.props.newsfeed} haveNews={this.state.haveNews} />
+                <h4>Welcome, { this.props.username }. Hope you have a great trading day!</h4>
             </div>
-            */
-           <Redirect to="/myroutines" />
         );
     }
 }
@@ -42,15 +30,13 @@ class HomeScreen extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.firebase.auth,
-        username: state.manager.currentUsername,
-        newsfeed: state.manager.currentNewsfeed
+        username: state.manager.currentUsername
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     updateScreen: newScreen => dispatch(updateScreen(newScreen)),
-    fetchUserInfo: uid => dispatch(fetchUserInfo(uid)),
-    fetchNewsfeed: (uid, username) => dispatch(fetchNewsfeed(uid, username))
+    fetchUserInfo: uid => dispatch(fetchUserInfo(uid))
 });
 
 export default compose(

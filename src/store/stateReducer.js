@@ -3,22 +3,16 @@ import * as actionCreators from './actionCreators.js';
 const initState = {
     currentScreen: '',
     currentUsername: '',
-    currentRoutines: [],
-    currentNewsfeed: []
+    currentUoa: []
 };
 
 const stateReducer = (state = initState, action) => {
     switch (action.type) {
-        case actionCreators.NEWSFEED_FETCHED:
-            return {
-                ...state,
-                currentNewsfeed: action.payload
-            }
         case actionCreators.CURRENT_USER_UPDATE:
             return {
                 ...state,
                 currentUsername: action.username,
-                currentRoutines: action.routines
+                currentUoa: action.uoa
             }
         case actionCreators.SCREEN_CHANGE:
             return {

@@ -13,7 +13,6 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const SCREEN_CHANGE = 'SCREEN_CHANGE';
 export const CURRENT_USER_UPDATE = 'CURRENT_USER_UPDATE';
-export const NEWSFEED_FETCHED = 'NEWSFEED_FETCHED';
 
 export const registerSuccess = () => {
     return { type: REGISTER_SUCCESS }

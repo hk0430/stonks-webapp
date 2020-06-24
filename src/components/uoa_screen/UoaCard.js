@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class ExerciseCard extends Component {
+class UoaCard extends Component {
     state = {
         editing: false,
         name: this.props.exercise.name,
@@ -127,4 +127,4 @@ class ExerciseCard extends Component {
     }
 }
 
-export default ExerciseCard;
+export default UoaCard;

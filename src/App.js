@@ -7,11 +7,8 @@ import { firebaseConnect } from 'react-redux-firebase';
 import Navbar from './components/navbar/Navbar.js';
 import RegisterScreen from './components/register_screen/RegisterScreen.js';
 import LoginScreen from './components/login_screen/LoginScreen.js';
-import HomeScreen from './components/explore_screen/HomeScreen.js';
-import RoutineList from './components/routines_list_screen/RoutineList.js';
-import RoutineScreen from './components/routine_screen/RoutineScreen.js';
-import NewsfeedRoutine from './components/explore_routines_screen/NewsfeedRoutine.js';
-import DatabaseTester from './test/DatabaseTester.js';
+import HomeScreen from './components/home_screen/HomeScreen.js';
+import UoaScreen from './components/uoa_screen/UoaScreen.js';
 
 class App extends Component {
   render() {
@@ -25,10 +22,7 @@ class App extends Component {
               <Route exact path="/" component={HomeScreen} />
               <Route path="/register" component={RegisterScreen} />
               <Route path="/login" component={LoginScreen} />
-              <Route path="/myroutines" component={RoutineList} />
-              <Route path="/routine/:id" component={RoutineScreen} />
-              <Route path="/explore/:username/:id" component={NewsfeedRoutine} />
-              <Route path="/test" component={DatabaseTester} />
+              <Route path="/uoa" component={UoaScreen} />
               <Route path="/:any" component={HomeScreen} />
             </Switch>
           </div>

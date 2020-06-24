@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import ExerciseCard from './ExerciseCard.js';
+import UoaCard from './UoaCard.js';
 
-class ExerciseLinks extends Component {
+class UoaLinks extends Component {
     editExercise = (exercise, index) => {
         this.props.routine.exercises[index] = exercise;
         this.props.updateRoutine(this.props.routine.exercises);
@@ -37,7 +37,7 @@ class ExerciseLinks extends Component {
             <div>
                 {routine && routine.exercises.map((exercise, index) => {
                     return (
-                        <ExerciseCard 
+                        <UoaCard 
                             exercise={exercise} 
                             key={index} 
                             index={index} 
@@ -53,4 +53,4 @@ class ExerciseLinks extends Component {
     }
 }
 
-export default ExerciseLinks;
+export default UoaLinks;

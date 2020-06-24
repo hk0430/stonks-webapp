@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
-import { APP_SCREEN } from '../../store/CONSTANTS';
+import { APP_SCREEN } from '../../store/constants';
 
 class LoggedOutLinks extends React.Component {
   render() {
