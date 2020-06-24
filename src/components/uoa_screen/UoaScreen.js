@@ -10,20 +10,57 @@ import {  } from '../../store/constants.js';
 
 class UoaScreen extends Component {
     state = {
-        sortBy: ''
+        sortBy: '',
+        modalState: false,
+        ticker: '',
+        type: '',
+        strike: '',
+        expiry: '',
+        spot: '',
+        deets: '',
+        premium: ''
     }
 
-    componentDidMount = () => {
-        if(this.props.index !== -1) {
-            // updating last_modified
-            this.props.routines[this.props.index].last_modified = new Date();
-            this.props.updateRoutines(this.props.auth.uid, this.props.routines);
-            this.props.fetchUserInfo(this.props.auth.uid);
+    handleChange = (e) => {
+        const { target } = e;
+    
+        this.setState(state => ({
+          ...state,
+          [target.id]: target.value,
+        }), () => {
+            console.log("new ticker: " + this.state.ticker);
+        });
+    }
+
+    getStyle = () => {
+        return {
+            display: this.state.modalState ? 'block' : 'none'
         }
     }
 
-    addNewExercise = () => {
-        const newExercise = {
+    showModal = () => {
+        this.setState({modalState: true});
+    }
+
+    hideModal = () => {
+        this.setState({
+            modalState: false,
+            ticker: '',
+            type: '',
+            strike: '',
+            expiry: '',
+            spot: '',
+            deets: '',
+            premium: ''
+        }, () => {
+            console.log(
+                this.state.ticker
+            )
+        });
+    }
+
+    addNewOption = () => {
+        const newOption = {
             ticker: '',         // string
             type: 'Calls',      // string: drop down menu Calls/Puts
             strike: 0,          // double
@@ -32,15 +69,9 @@ class UoaScreen extends Component {
             deets: '',          // string
             premium: 0          // double
         };
-        this.props.routines[this.props.index].exercises.push(newExercise);
-        this.props.updateRoutines(this.props.auth.uid, this.props.routines);
+        this.props.uoa.push(newOption);
+        this.props.updateUoa(this.props.auth.uid, this.props.uoa);
         this.props.fetchUserInfo(this.props.auth.uid);      // put these 2 asynch calls in a promise later on
-    }
-
-    updateRoutine = exercises => {
-        this.props.routines[this.props.index].exercises = exercises.slice();
-        this.props.updateRoutines(this.props.auth.uid, this.props.routines);
-        this.props.fetchUserInfo(this.props.auth.uid);
     }
 
     render() {
@@ -48,20 +79,25 @@ class UoaScreen extends Component {
             return <Redirect to="/login" />;
         }
 
-        if(this.props.index === -1)
-            return <Redirect to="/myroutines" />;
+        console.log("ticker: " + this.state.ticker);
+        console.log("strike: " + this.state.strike);
+        console.log("expiry: " + this.state.expiry);
+        console.log("spot: " + this.state.spot);
+        console.log("deets: " + this.state.deets);
+        console.log("premium: " + this.state.premium);
+        console.log("type: " + this.state.type);
 
         return (
-            <div className="container exercise-list">
-                <div id="exercise-container">
-                    <div className="exercise_header_card">
-                        <div className="exercise_task_header">
+            <div className="container">
+                <div>
+                    <div className="uoa_header_card">
+                        <div className="ticker_header">
                             Ticker
                         </div>
-                        <div className="exercise_group_header">
+                        <div className="type_header">
                             Type
                         </div>
-                        <div className="exercise_reps_header">
+                        <div className="strike_header">
                             Strike
                         </div>
                         <div className="expiry_header">
@@ -78,9 +114,47 @@ class UoaScreen extends Component {
                         </div>
                     </div>
                 </div>
-                <UoaLinks routine={this.props.routine} updateRoutine={this.updateRoutine} />
+                <UoaLinks uoa={this.props.uoa} updateUoa={this.updateUoa} />
                 <br />
-                <div className="new_button_container"><button onClick={this.addNewExercise}>Add New Exercise</button></div>
+                <div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>
+                
+                <div className="modal" style={this.getStyle()}>
+                    <span className="close" onClick={this.hideModal}>&times;</span>
+                    <div className="form-container">
+                        <h5 className="grey-text text-darken-3">New Option Flow</h5>
+                        <div className="input-field modal-field">
+                            <label htmlFor="ticker">Ticker</label>
+                            <input type="text" name="ticker" defaultValue={this.state.ticker} required onChange={this.handleChange} />
+                        </div><br/>
+                        <div className="input-field modal-field">
+                            <label htmlFor="strike">Strike</label>
+                            <input type="number" name="strike" min="0" defaultValue={this.state.strike} required onChange={this.handleChange} />
+                        </div><br/>
+                        <div className="input-field modal-field">
+                            <label htmlFor="expiry">Expiry</label>
+                            <input type="date" name="expiry" required defaultValue={this.state.expiry} onChange={this.handleChange} />
+                        </div><br/>
+                        <div className="input-field modal-field">
+                            <label htmlFor="spot">Spot</label>
+                            <input type="number" name="spot" min="0" required defaultValue={this.state.spot} onChange={this.handleChange} />
+                        </div><br/>
+                        <div className="input-field modal-field">
+                            <label htmlFor="deets">Details</label>
+                            <input type="text" name="deets" required defaultValue={this.state.deets} onChange={this.handleChange} />
+                        </div><br/>
+                        <div className="input-field modal-field">
+                            <label htmlFor="premium">Premium</label>
+                            <input type="number" name="premium" min="0" required defaultValue={this.state.premium} onChange={this.handleChange} />
+                        </div><br/>
+                        <div className="modal-field">
+                            <select className="dropdown" name="type" onChange={this.handleChange}>
+                                <option value="calls">Calls</option>
+                                <option value="puts">Puts</option>
+                            </select>
+                        </div><br/>
+                        <div className="new_button_container"><button onClick={this.showModal}>Submit</button></div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -102,7 +176,6 @@ const mapStateToProps = (state, ownProps) => {
         id,
         index,
         uoa: state.manager.currentUoa //routines: state.manager.currentRoutines
-        //routine: state.manager.currentRoutines[index]
     };
 };
 

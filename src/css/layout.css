@@ -46,7 +46,7 @@ body {
     text-align: left;
 }
 
-.routine_header_card, .exercise_header_card {
+.uoa_header_card {
     position: relative;
     height: 58px;
     grid-row-gap: 0px;
@@ -57,91 +57,76 @@ body {
     cursor: pointer;
 }
 
-.routine_name_header, .routine_created_header, .routine_last_mod_header, .exercise_task_header, .exercise_group_header, .exercise_reps_header {
+.ticker_header, .type_header, .strike_header, .expiry_header, .spot_header, .deets_header, .premium_header {
     position: absolute;
     top: 12%;
     font-size: 180%;
 }
 
-.routine_name_header {
-    left: 4%;
+.ticker_header {
+    left: 5%;
 }
 
-.routine_created_header {
-    left: 45%;
+.type_header {
+    left: 15%;
 }
 
-.routine_last_mod_header {
-    left: 65%;
+.strike_header {
+    left: 25%;
 }
 
-.routine_list_card {
-    position: relative;
-    height: 60px;
-    grid-row-gap: 0px;
-    grid-column-gap: 50px;
-    margin-top: 0px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    cursor: pointer;
+.expiry_header {
+    left: 35%;
 }
 
-.routine_list_name, .routine_list_created, .routine_list_timestamp, .routine_list_delete {
+.spot_header {
+    left: 50%;
+}
+
+.deets_header {
+    left: 60%;
+}
+
+.premium_header {
+    left: 75%;
+}
+
+.option_ticker, .option_type, .option_strike, .option_expiry, .option_spot, .option_deets, .option_premium, .option_delete {
     position: absolute;
     left: 2%;
     top: 10%;
     font-size: 125%;
 }
 
-.routine_list_name {
-    left: 4.5%;
+.option_ticker {
+    left: 5%;
 }
 
-.routine_list_created {
-    left: 45%;
+.option_type {
+    left: 15%;
 }
 
-.routine_list_timestamp {
-    left: 65%;
+.option_strike {
+    left: 25%;
 }
 
-.routine_list_delete {
-    left: 95%;
-    font-size: 200%;
+.option_expiry {
+    left: 35%;
 }
 
-.exercise_task_header {
-    left: 4%;
+.option_spot {
+    left: 50%;
 }
 
-.exercise_group_header {
-    left: 40%;
+.option_deets {
+    left: 60%;
 }
 
-.exercise_reps_header {
+.option_premium {
     left: 75%;
 }
 
-.exercise_name, .exercise_group, .exercise_reps, .exercise_edits {
-    position: absolute;
-    left: 2%;
-    top: 10%;
-    font-size: 125%;
-}
-
-.exercise_name {
-    left: 4.5%;
-}
-
-.exercise_group {
-    left: 40%;
-}
-
-.exercise_reps {
-    left: 75%;
-}
-
-.exercise_edits {
+.option_delete {
     left: 88%;
     font-size: 160%;
     cursor: pointer;
@@ -160,10 +145,6 @@ button {
     outline: none;
 }
 
-.routine_name_container {
-    margin-top: 2%;
-}
-
 .exercise_card_btn_wrapper {
     position: absolute;
     top: 140%;
@@ -172,4 +153,38 @@ button {
 
 .card:hover {
     background-color: rgb(243, 237, 237);
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    top: 18%;
+    width: 35%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    vertical-align: center;
+}
+
+.close {
+    color: #aaaaaa;
+    margin-right: 5%;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+  
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-field {
+    margin: auto;
+    width: 60%;
+}
+
+.dropdown {
+    display: block;
 }

@@ -14,7 +14,7 @@ class Navbar extends React.Component {
     return (
       <nav className="nav-wrapper grey darken-3">
         <div className="container">
-          <Link to="/" className="brand-logo">GyMonkey<span role="img" aria-label="logo">&#128584;</span></Link>
+          <Link to="/" className="brand-logo"><span role="img" aria-label="logo">&#128142;</span><span role="img" aria-label="logo">&#128075;</span></Link>
           {links}
         </div>
       </nav>

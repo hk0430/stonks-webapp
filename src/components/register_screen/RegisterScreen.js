@@ -15,9 +15,7 @@ class RegisterScreen extends Component {
     lastName: '',
     email: '',
     password: '',
-    supremeRuler: false,
-    routines: [],
-    newsfeed: []
+    uoa: []
   }
 
   componentDidMount = () => {
