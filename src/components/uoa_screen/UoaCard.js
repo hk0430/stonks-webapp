@@ -7,8 +7,10 @@ class UoaCard extends Component {
 
     render() {
         var premium = this.props.option.premium;
-        if(premium >= 1000)
+        if(premium >= 1000 && premium < 1000000)
             premium = premium / 1000 + "K";
+        else if(premium >= 1000000)
+            premium = premium / 1000000 + "M";
 
         return (
             <div className="card z-depth-0">
@@ -19,6 +21,7 @@ class UoaCard extends Component {
                     <div className="option_strike">{this.props.option.strike}</div>
                     <div className="option_expiry">{this.props.option.expiry}</div>
                     <div className="option_spot">{this.props.option.spot}</div>
+                    <div className="option_order">{this.props.option.order}</div>
                     <div className="option_deets">{this.props.option.deets}</div>
                     <div className="option_premium">{premium}</div>
                     <div className="option_delete">

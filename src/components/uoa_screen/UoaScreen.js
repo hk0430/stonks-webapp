@@ -18,6 +18,7 @@ class UoaScreen extends Component {
         strike: '',
         expiry: '',
         spot: '',
+        order: '',
         deets: '',
         premium: ''
     }
@@ -45,17 +46,17 @@ class UoaScreen extends Component {
         this.setState({
             modalState: false
         });
-        document.getElementsByTagName("INPUT").value = '';
     }
 
     addNewOption = () => {
         var newOption = {
             date: this.state.date,
-            ticker: this.state.ticker,
+            ticker: this.state.ticker.toUpperCase(),
             type: this.state.type,
             strike: this.state.strike,
             expiry: this.state.expiry,
             spot: this.state.spot,
+            order: this.state.order,
             deets: this.state.deets,
             premium: this.state.premium
         };
@@ -80,6 +81,7 @@ class UoaScreen extends Component {
         console.log("deets: " + this.state.deets);
         console.log("premium: " + this.state.premium);
         console.log("type: " + this.state.type);
+        console.log("order: " + this.state.order);
         console.log("-------------------------------");
 
         return (
@@ -104,6 +106,9 @@ class UoaScreen extends Component {
                         <div className="spot_header">
                             Spot
                         </div>
+                        <div className="order_header">
+                            Order
+                        </div>
                         <div className="deets_header">
                             Deets
                         </div>
@@ -122,35 +127,44 @@ class UoaScreen extends Component {
                         <div className="input-field modal-field">
                             <label htmlFor="date">Date</label>
                             <input type="date" name="date" required onChange={this.handleChange} />
-                        </div><br/>
+                        </div>
                         <div className="input-field modal-field">
                             <label htmlFor="ticker">Ticker</label>
                             <input type="text" name="ticker" required onChange={this.handleChange} />
-                        </div><br/>
+                        </div>
                         <div className="input-field modal-field">
                             <label htmlFor="strike">Strike</label>
                             <input type="number" name="strike" min="0" required onChange={this.handleChange} />
-                        </div><br/>
+                        </div>
                         <div className="input-field modal-field">
                             <label htmlFor="expiry">Expiry</label>
                             <input type="date" name="expiry" required onChange={this.handleChange} />
-                        </div><br/>
+                        </div>
                         <div className="input-field modal-field">
                             <label htmlFor="spot">Spot</label>
                             <input type="number" name="spot" min="0" required onChange={this.handleChange} />
-                        </div><br/>
+                        </div>
                         <div className="input-field modal-field">
                             <label htmlFor="deets">Details</label>
                             <input type="text" name="deets" required onChange={this.handleChange} />
-                        </div><br/>
+                        </div>
                         <div className="input-field modal-field">
                             <label htmlFor="premium">Premium</label>
                             <input type="number" name="premium" min="0" required onChange={this.handleChange} />
-                        </div><br/>
+                        </div>
                         <div className="modal-field">
                             <select className="dropdown" name="type" onChange={this.handleChange}>
+                                <option value="" selected="selected" disabled>Select option type</option>
                                 <option value="calls">Calls</option>
                                 <option value="puts">Puts</option>
+                            </select>
+                        </div>
+                        <div className="modal-field">
+                            <select className="dropdown" name="order" onChange={this.handleChange}>
+                                <option value="" selected="selected" disabled>Select order type</option>
+                                <option value="sweep">Sweep</option>
+                                <option value="block">Block</option>
+                                <option value="split">Split</option>
                             </select>
                         </div>
                         <div className="new_button_container"><button onClick={this.addNewOption}>Submit</button></div>

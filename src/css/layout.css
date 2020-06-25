@@ -66,10 +66,10 @@ body {
     cursor: pointer;
 }
 
-.date_header, .ticker_header, .type_header, .strike_header, .expiry_header, .spot_header, .deets_header, .premium_header {
+.date_header, .ticker_header, .type_header, .strike_header, .expiry_header, .spot_header, .order_header, .deets_header, .premium_header {
     position: absolute;
     top: 12%;
-    font-size: 180%;
+    font-size: 160%;
 }
 
 .ticker_header {
@@ -92,18 +92,22 @@ body {
     left: 60%;
 }
 
-.deets_header {
+.order_header {
     left: 70%;
 }
 
-.premium_header {
-    left: 85%;
+.deets_header {
+    left: 80%;
 }
 
-.option_date, .option_ticker, .option_type, .option_strike, .option_expiry, .option_spot, .option_deets, .option_premium, .option_delete {
+.premium_header {
+    left: 95%;
+}
+
+.option_date, .option_ticker, .option_type, .option_strike, .option_expiry, .option_spot, .option_order, .option_deets, .option_premium, .option_delete {
     position: absolute;
     top: 10%;
-    font-size: 125%;
+    font-size: 120%;
     color: white;
 }
 
@@ -131,16 +135,20 @@ body {
     left: 60%;
 }
 
-.option_deets {
+.option_order {
     left: 70%;
 }
 
+.option_deets {
+    left: 80%;
+}
+
 .option_premium {
-    left: 85%;
+    left: 95%;
 }
 
 .option_delete {
-    left: 95%;
+    left: 105%;
     font-size: 160%;
     cursor: pointer;
 }
