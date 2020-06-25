@@ -6,12 +6,13 @@ import { firestoreConnect } from 'react-redux-firebase';
 
 import UoaLinks from './UoaLinks.js';
 import { updateUoa, fetchUserInfo } from '../../store/asynchHandler.js';
-import {  } from '../../store/constants.js';
+import { UOA_SORTING_CRITERIA } from '../../store/constants.js';
 
 class UoaScreen extends Component {
     state = {
         sortBy: '',
         modalState: false,
+        date: '',
         ticker: '',
         type: '',
         strike: '',
@@ -26,10 +27,8 @@ class UoaScreen extends Component {
     
         this.setState(state => ({
           ...state,
-          [target.id]: target.value,
-        }), () => {
-            console.log("new ticker: " + this.state.ticker);
-        });
+          [target.name]: target.value,
+        }));
     }
 
     getStyle = () => {
@@ -44,32 +43,25 @@ class UoaScreen extends Component {
 
     hideModal = () => {
         this.setState({
-            modalState: false,
-            ticker: '',
-            type: '',
-            strike: '',
-            expiry: '',
-            spot: '',
-            deets: '',
-            premium: ''
-        }, () => {
-            console.log(
-                this.state.ticker
-            )
+            modalState: false
         });
+        document.getElementsByTagName("INPUT").value = '';
     }
 
     addNewOption = () => {
-        const newOption = {
-            ticker: '',         // string
-            type: 'Calls',      // string: drop down menu Calls/Puts
-            strike: 0,          // double
-            expiry: '',         // date, chosen from calendar interface
-            spot: 0,            // double,
-            deets: '',          // string
-            premium: 0          // double
+        var newOption = {
+            date: this.state.date,
+            ticker: this.state.ticker,
+            type: this.state.type,
+            strike: this.state.strike,
+            expiry: this.state.expiry,
+            spot: this.state.spot,
+            deets: this.state.deets,
+            premium: this.state.premium
         };
+        console.log(newOption);
         this.props.uoa.push(newOption);
+        this.hideModal();
         this.props.updateUoa(this.props.auth.uid, this.props.uoa);
         this.props.fetchUserInfo(this.props.auth.uid);      // put these 2 asynch calls in a promise later on
     }
@@ -79,6 +71,8 @@ class UoaScreen extends Component {
             return <Redirect to="/login" />;
         }
 
+        console.log(this.props.uoa);
+
         console.log("ticker: " + this.state.ticker);
         console.log("strike: " + this.state.strike);
         console.log("expiry: " + this.state.expiry);
@@ -86,11 +80,15 @@ class UoaScreen extends Component {
         console.log("deets: " + this.state.deets);
         console.log("premium: " + this.state.premium);
         console.log("type: " + this.state.type);
+        console.log("-------------------------------");
 
         return (
             <div className="container">
                 <div>
                     <div className="uoa_header_card">
+                        <div className="date_header">
+                            Date
+                        </div>
                         <div className="ticker_header">
                             Ticker
                         </div>
@@ -121,38 +119,41 @@ class UoaScreen extends Component {
                 <div className="modal" style={this.getStyle()}>
                     <span className="close" onClick={this.hideModal}>&times;</span>
                     <div className="form-container">
-                        <h5 className="grey-text text-darken-3">New Option Flow</h5>
+                        <div className="input-field modal-field">
+                            <label htmlFor="date">Date</label>
+                            <input type="date" name="date" required onChange={this.handleChange} />
+                        </div><br/>
                         <div className="input-field modal-field">
                             <label htmlFor="ticker">Ticker</label>
-                            <input type="text" name="ticker" defaultValue={this.state.ticker} required onChange={this.handleChange} />
+                            <input type="text" name="ticker" required onChange={this.handleChange} />
                         </div><br/>
                         <div className="input-field modal-field">
                             <label htmlFor="strike">Strike</label>
-                            <input type="number" name="strike" min="0" defaultValue={this.state.strike} required onChange={this.handleChange} />
+                            <input type="number" name="strike" min="0" required onChange={this.handleChange} />
                         </div><br/>
                         <div className="input-field modal-field">
                             <label htmlFor="expiry">Expiry</label>
-                            <input type="date" name="expiry" required defaultValue={this.state.expiry} onChange={this.handleChange} />
+                            <input type="date" name="expiry" required onChange={this.handleChange} />
                         </div><br/>
                         <div className="input-field modal-field">
                             <label htmlFor="spot">Spot</label>
-                            <input type="number" name="spot" min="0" required defaultValue={this.state.spot} onChange={this.handleChange} />
+                            <input type="number" name="spot" min="0" required onChange={this.handleChange} />
                         </div><br/>
                         <div className="input-field modal-field">
                             <label htmlFor="deets">Details</label>
-                            <input type="text" name="deets" required defaultValue={this.state.deets} onChange={this.handleChange} />
+                            <input type="text" name="deets" required onChange={this.handleChange} />
                         </div><br/>
                         <div className="input-field modal-field">
                             <label htmlFor="premium">Premium</label>
-                            <input type="number" name="premium" min="0" required defaultValue={this.state.premium} onChange={this.handleChange} />
+                            <input type="number" name="premium" min="0" required onChange={this.handleChange} />
                         </div><br/>
                         <div className="modal-field">
                             <select className="dropdown" name="type" onChange={this.handleChange}>
                                 <option value="calls">Calls</option>
                                 <option value="puts">Puts</option>
                             </select>
-                        </div><br/>
-                        <div className="new_button_container"><button onClick={this.showModal}>Submit</button></div>
+                        </div>
+                        <div className="new_button_container"><button onClick={this.addNewOption}>Submit</button></div>
                     </div>
                 </div>
             </div>
