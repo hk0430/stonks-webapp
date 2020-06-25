@@ -5,7 +5,7 @@ import UoaCard from './UoaCard.js';
 class UoaLinks extends Component {
     deleteOption = index => {
         this.props.uoa.splice(index, 1);
-        this.props.updateUoa(this.props.uoa);
+        this.props.deleteAndUpdate();
     }
 
     render() {
