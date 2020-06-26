@@ -192,6 +192,7 @@ button:active {
 
 .card:hover {
     background-color: #4D4D4D;
+    color: red;
 }
 
 .modal {

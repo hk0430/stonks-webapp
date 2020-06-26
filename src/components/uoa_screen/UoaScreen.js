@@ -23,6 +23,10 @@ class UoaScreen extends Component {
         premium: ''
     }
 
+    componentDidMount = () => {
+        this.props.fetchUserInfo(this.props.auth.uid);
+    }
+
     handleChange = (e) => {
         const { target } = e;
     
@@ -42,7 +46,7 @@ class UoaScreen extends Component {
         this.setState({modalState: true});
     }
 
-    hideModal = () => {
+    hideAndClear = () => {
         this.setState({
             modalState: false
         });
@@ -53,6 +57,8 @@ class UoaScreen extends Component {
         document.getElementById("spot_field").value = "";
         document.getElementById("deets_field").value = "";
         document.getElementById("premium_field").value = "";
+        document.getElementById("select_type").selectedIndex = 0;
+        document.getElementById("select_order").selectedIndex = 0;
     }
 
     addNewOption = () => {
@@ -67,9 +73,8 @@ class UoaScreen extends Component {
             deets: this.state.deets,
             premium: this.state.premium
         };
-        console.log(newOption);
         this.props.uoa.push(newOption);
-        this.hideModal();
+        this.hideAndClear();
         this.props.updateUoa(this.props.auth.uid, this.props.uoa);
         this.props.fetchUserInfo(this.props.auth.uid);      // put these 2 asynch calls in a promise later on
     }
@@ -79,52 +84,209 @@ class UoaScreen extends Component {
         this.props.fetchUserInfo(this.props.auth.uid);      // put these 2 asynch calls in a promise later on
     }
 
+    compare = (item1, item2) => {
+        let criteria = this.state.sortBy;
+        if((criteria === UOA_SORTING_CRITERIA.SORT_BY_DATE_DECREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_TICKER_DECREASING) || 
+                (criteria === UOA_SORTING_CRITERIA.SORT_BY_TYPE_DECREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_STRIKE_DECREASING) || 
+                (criteria === UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_DECREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_SPOT_DECREASING) || 
+                (criteria === UOA_SORTING_CRITERIA.SORT_BY_ORDER_DECREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_DECREASING)) {
+            let temp = item1;
+            item1 = item2;
+            item2 = temp;
+        }
+        
+        if((criteria === UOA_SORTING_CRITERIA.SORT_BY_DATE_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_DATE_DECREASING)) {
+            if(item1.date < item2.date)
+                return -1;
+            else if(item1.date > item2.date)
+                return 1;
+            else
+                return 0;
+        }
+        
+        else if((criteria === UOA_SORTING_CRITERIA.SORT_BY_TICKER_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_TICKER_DECREASING)) {
+            if(item1.ticker < item2.ticker)
+                return -1;
+            else if(item1.ticker > item2.ticker)
+                return 1;
+            else
+                return 0;
+        }
+
+        else if((criteria === UOA_SORTING_CRITERIA.SORT_BY_TYPE_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_TYPE_DECREASING)) {
+            if(parseInt(item1.type) < parseInt(item2.type))
+                return -1;
+            else if(parseInt(item1.type) > parseInt(item2.type))
+                return 1;
+            else
+                return 0;
+        }
+
+        else if((criteria === UOA_SORTING_CRITERIA.SORT_BY_STRIKE_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_STRIKE_DECREASING)) {
+            if(parseInt(item1.strike) < parseInt(item2.strike))
+                return -1;
+            else if(parseInt(item1.strike) > parseInt(item2.strike))
+                return 1;
+            else
+                return 0;
+        }
+
+        else if((criteria === UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_DECREASING)) {
+            if(parseInt(item1.expiry) < parseInt(item2.expiry))
+                return -1;
+            else if(parseInt(item1.expiry) > parseInt(item2.expiry))
+                return 1;
+            else
+                return 0;
+        }
+
+        else if((criteria === UOA_SORTING_CRITERIA.SORT_BY_SPOT_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_SPOT_DECREASING)) {
+            if(parseInt(item1.spot) < parseInt(item2.spot))
+                return -1;
+            else if(parseInt(item1.spot) > parseInt(item2.spot))
+                return 1;
+            else
+                return 0;
+        }
+
+        else if((criteria === UOA_SORTING_CRITERIA.SORT_BY_ORDER_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_ORDER_DECREASING)) {
+            if(parseInt(item1.order) < parseInt(item2.order))
+                return -1;
+            else if(parseInt(item1.order) > parseInt(item2.order))
+                return 1;
+            else
+                return 0;
+        }
+
+        else if((criteria === UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_INCREASING) || (criteria === UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_DECREASING)) {
+            if(parseInt(item1.premium) < parseInt(item2.premium))
+                return -1;
+            else if(parseInt(item1.premium) > parseInt(item2.premium))
+                return 1;
+            else
+                return 0;
+        }
+    }
+
+    sortByDate = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_DATE_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_DATE_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_DATE_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortByTicker = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_TICKER_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_TICKER_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_TICKER_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortByType = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_TYPE_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_TYPE_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_TYPE_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortByStrike = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_STRIKE_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_STRIKE_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_STRIKE_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortByExpiry = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortBySpot = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_SPOT_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_SPOT_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_SPOT_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortByOrder = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_ORDER_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_ORDER_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_ORDER_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortByPremium = () => {
+        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_INCREASING) {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_DECREASING })
+        }
+        else {
+            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_INCREASING })
+        }
+        this.sortIt();
+    }
+
+    sortIt = () => {
+        this.props.uoa.sort(this.compare);
+        this.props.updateUoa(this.props.auth.uid, this.props.uoa);
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
         }
 
-        console.log(this.props.uoa);
-
-        console.log("ticker: " + this.state.ticker);
-        console.log("strike: " + this.state.strike);
-        console.log("expiry: " + this.state.expiry);
-        console.log("spot: " + this.state.spot);
-        console.log("deets: " + this.state.deets);
-        console.log("premium: " + this.state.premium);
-        console.log("type: " + this.state.type);
-        console.log("order: " + this.state.order);
-        console.log("-------------------------------");
-
         return (
             <div className="container">
                 <div>
                     <div className="uoa_header_card">
-                        <div className="date_header">
+                        <div className="date_header" onClick={this.sortByDate}>
                             Date
                         </div>
-                        <div className="ticker_header">
+                        <div className="ticker_header" onClick={this.sortByTicker}>
                             Ticker
                         </div>
-                        <div className="type_header">
+                        <div className="type_header" onClick={this.sortByType}>
                             Type
                         </div>
-                        <div className="strike_header">
+                        <div className="strike_header" onClick={this.sortByStrike}>
                             Strike
                         </div>
-                        <div className="expiry_header">
+                        <div className="expiry_header" onClick={this.sortByExpiry}>
                             Expiry
                         </div>
-                        <div className="spot_header">
+                        <div className="spot_header" onClick={this.sortBySpot}>
                             Spot
                         </div>
-                        <div className="order_header">
+                        <div className="order_header" onClick={this.sortByOrder}>
                             Order
                         </div>
                         <div className="deets_header">
                             Deets
                         </div>
-                        <div className="premium_header">
+                        <div className="premium_header" onClick={this.sortByPremium}>
                             Premium
                         </div>
                     </div>
@@ -134,7 +296,7 @@ class UoaScreen extends Component {
                 <div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>
                 
                 <div className="modal" style={this.getStyle()}>
-                    <span className="close" onClick={this.hideModal}>&times;</span>
+                    <span className="close" onClick={this.hideAndClear}>&times;</span>
                     <div className="form-container">
                         <div className="input-field modal-field">
                             <label htmlFor="date">Date</label>
@@ -165,15 +327,15 @@ class UoaScreen extends Component {
                             <input type="number" name="premium" id="premium_field" min="0" onChange={this.handleChange} />
                         </div>
                         <div className="modal-field">
-                            <select className="dropdown" name="type" onChange={this.handleChange}>
-                                <option value="" selected="selected" disabled>Select option type</option>
+                            <select className="dropdown" name="type" id="select_type" defaultValue={'DEFAULT'} onChange={this.handleChange}>
+                                <option value="" value="DEFAULT" disabled>Select option type</option>
                                 <option value="calls">Calls</option>
                                 <option value="puts">Puts</option>
                             </select>
                         </div>
                         <div className="modal-field">
-                            <select className="dropdown" name="order" onChange={this.handleChange}>
-                                <option value="" selected="selected" disabled>Select order type</option>
+                            <select className="dropdown" name="order" id="select_order" defaultValue={'DEFAULT'} onChange={this.handleChange}>
+                                <option value="" value="DEFAULT" disabled>Select order type</option>
                                 <option value="sweep">Sweep</option>
                                 <option value="block">Block</option>
                                 <option value="split">Split</option>
@@ -187,22 +349,10 @@ class UoaScreen extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    const { id } = ownProps.match.params;       // get id from url (:id) from App
-    var index = -1;
-    if(state.firebase.profile.routines) {
-        /* 
-            after a refresh, routines becomes undefined, causing a refresh problem
-            temporarily solved it by redirecting to /myroutines if refresh problem occurs
-        */
-        index = state.firebase.profile.routines.findIndex(item => item.id === id);
-    }
-
+const mapStateToProps = (state) => {
     return {
         auth: state.firebase.auth,
-        id,
-        index,
-        uoa: state.manager.currentUoa //routines: state.manager.currentRoutines
+        uoa: state.manager.currentUoa
     };
 };
 

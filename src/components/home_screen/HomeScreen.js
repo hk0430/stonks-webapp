@@ -22,6 +22,8 @@ class HomeScreen extends Component {
         return (
             <div className="dashboard container">
                 <h4>Welcome, { this.props.username }. Hope you have a great trading day!</h4>
+                <br/>
+                <h3>PLACEHOLDER - HERE YOU WILL SEE MARKET NEWS ON TICKERS THAT IS IN YOUR UOA</h3>
             </div>
         );
     }

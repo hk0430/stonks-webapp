@@ -17,7 +17,9 @@ class LoggedInLinks extends React.Component {
     const { profile } = this.props;
     return (
       <ul className="right">
+        <li className="navbar-links"><NavLink to="/">Explore</NavLink></li>
         <li className="navbar-links"><NavLink to="/uoa">Options Activities</NavLink></li>
+        <li className="navbar-links"><NavLink to="/analysis">Analysis</NavLink></li>
         <li className="navbar-links"><NavLink to="/" onClick={this.handleLogout}>Log Out</NavLink></li>
         <li className="navbar-links"><NavLink to="/" className="btn btn-floating pink lighten-1">{profile.initials}</NavLink></li>
       </ul>

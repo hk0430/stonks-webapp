@@ -53,6 +53,8 @@ class LoginScreen extends Component {
       <div className="form-container">
         <form onSubmit={this.handleSubmit} className="form col s4 white">
           <h5 className="grey-text text-darken-3">Login</h5>
+          <h6>User: bigstonks@gmail.com</h6>
+          <h6>Pass: administrator</h6>
           <div className="input-field">
             <label htmlFor="email">Email</label>
             <input className="active" type="email" name="email" id="email" onChange={this.handleChange} />
