@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
+import uuid from 'uuid';
 
 import UoaLinks from './UoaLinks.js';
 import { updateUoa, fetchUserInfo } from '../../store/asynchHandler.js';
@@ -20,10 +21,32 @@ class UoaScreen extends Component {
         spot: '',
         order: '',
         deets: '',
-        premium: ''
+        premium: '',
+        date_filter: '',
+        ticker_filter: ''
     }
 
     componentDidMount = () => {
+        /*
+        var promise = new Promise((resolve, reject) => {
+            var res = this.props.fetchUserInfo(this.props.auth.uid);
+            console.log(res);
+            if (res === true) {
+              resolve("Proceed to set state");
+            }
+            else {
+              reject(Error("Do not proceed"));
+            }
+        });
+        promise.then(() => {
+            console.log(this.props.uoa);
+            this.setState({ filtered: this.props.uoa }, () => {
+                console.log(this.state);
+            });
+        }, (err) => {
+            console.log("Failed to set state");
+        })
+        */
         this.props.fetchUserInfo(this.props.auth.uid);
     }
 
@@ -71,15 +94,16 @@ class UoaScreen extends Component {
             spot: this.state.spot,
             order: this.state.order,
             deets: this.state.deets,
-            premium: this.state.premium
+            premium: this.state.premium,
+            uid: uuid.v4(),
+            hidden: false
         };
         this.props.uoa.push(newOption);
         this.hideAndClear();
-        this.props.updateUoa(this.props.auth.uid, this.props.uoa);
-        this.props.fetchUserInfo(this.props.auth.uid);      // put these 2 asynch calls in a promise later on
+        this.update();
     }
 
-    deleteAndUpdate = () => {
+    update = () => {
         this.props.updateUoa(this.props.auth.uid, this.props.uoa);
         this.props.fetchUserInfo(this.props.auth.uid);      // put these 2 asynch calls in a promise later on
     }
@@ -253,6 +277,13 @@ class UoaScreen extends Component {
         this.props.updateUoa(this.props.auth.uid, this.props.uoa);
     }
 
+    handleFilter = () => {
+        /*
+            filter idea:
+            make a new field called hidden or something, mark true if filtered out and then in UoaCard, dont render anything if it's hidden
+        */
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
@@ -260,7 +291,22 @@ class UoaScreen extends Component {
 
         return (
             <div className="container">
-                <div>
+                <div className="filter_container">
+                    <h5>Filter by</h5>
+                    <div className="filter_field_containers">
+                        <label htmlFor="date_filter">Date</label>
+                        <input type="date" name="date_filter" className="filter_fields" onChange={this.handleChange}/>
+                    </div>
+                    <div className="filter_field_containers">
+                        <label htmlFor="ticker_filter">Ticker</label>
+                        <input type="text" name="ticker_filter" className="filter_fields" onChange={this.handleChange}/>
+                    </div>
+                    <div className="filter_button_container">
+                        <button className="filter_button" onClick={this.handleFilter}>Search</button>
+                    </div>
+                </div>
+
+                <div className="uoa_container">
                     <div className="uoa_header_card">
                         <div className="date_header" onClick={this.sortByDate}>
                             Date
@@ -291,27 +337,27 @@ class UoaScreen extends Component {
                         </div>
                     </div>
                 </div>
-                <UoaLinks uoa={this.props.uoa} deleteAndUpdate={this.deleteAndUpdate} />
+                <UoaLinks uoa={this.props.uoa} deleteAndUpdate={this.update} />
                 <br />
                 <div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>
                 
                 <div className="modal" style={this.getStyle()}>
                     <span className="close" onClick={this.hideAndClear}>&times;</span>
                     <div className="form-container">
-                        <div className="input-field modal-field">
-                            <label htmlFor="date">Date</label>
+                        <div className="modal-field">
+                            <label htmlFor="date" className="date_labels">Date</label>
                             <input type="date" name="date" id="date_field" onChange={this.handleChange} />
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="ticker">Ticker</label>
-                            <input type="text" name="ticker" id="ticker_field" className="yeet" onChange={this.handleChange} />
+                            <input type="text" name="ticker" id="ticker_field" onChange={this.handleChange} />
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="strike">Strike</label>
                             <input type="number" name="strike" id="strike_field" min="0" onChange={this.handleChange} />
                         </div>
-                        <div className="input-field modal-field">
-                            <label htmlFor="expiry">Expiry</label>
+                        <div className="modal-field">
+                            <label htmlFor="expiry" className="date_labels">Expiry</label>
                             <input type="date" name="expiry" id="expiry_field" onChange={this.handleChange} />
                         </div>
                         <div className="input-field modal-field">

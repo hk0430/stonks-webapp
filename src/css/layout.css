@@ -155,6 +155,7 @@ body {
 
 .new_button_container {
     text-align: center;
+    margin-bottom: 5%;
 }
 
 button {
@@ -226,4 +227,30 @@ button:active {
 
 .dropdown {
     display: block;
+    margin-bottom: 2%;
+}
+
+.filter_fields {
+    color: white;
+}
+
+.filter_field_containers {
+    float: left;
+    margin-right: 5%;
+}
+
+.uoa_container {
+    clear: both;
+}
+
+.date_labels {
+    float: left;
+}
+
+.filter_button {
+    margin: auto;
+}
+
+.filter_button_container {
+    clear: both;
 }
