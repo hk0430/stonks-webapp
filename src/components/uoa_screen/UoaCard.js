@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class UoaCard extends Component {
     handleDeleteOption = () => {
-        this.props.deleteOption(this.props.index);
+        this.props.deleteOption(this.props.uid);
     }
 
     render() {

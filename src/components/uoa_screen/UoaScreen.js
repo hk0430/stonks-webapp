@@ -274,8 +274,12 @@ class UoaScreen extends Component {
     }
 
     sortIt = () => {
-        this.props.uoa.sort(this.compare);
-        this.props.updateUoa(this.props.auth.uid, this.props.uoa);
+        if(!this.state.filtering) {
+            this.props.uoa.sort(this.compare);
+            this.props.updateUoa(this.props.auth.uid, this.props.uoa);
+        } else {
+            this.state.filtered_elements.sort(this.compare);
+        }
     }
 
     handleFilter = () => {
@@ -304,6 +308,20 @@ class UoaScreen extends Component {
         });
     }
 
+    handleReset = () => {
+        document.getElementById("date_filter").value = "";
+        document.getElementById("ticker_filter").value = "";
+        this.setState({filtering: false, date_filter: "", ticker_filter: "", filtered_elements: []});
+    }
+
+    deleteFromMain = key => {
+        for(let i = 0; i < this.props.uoa.length; i++) {
+            if(key === this.props.uoa[i].uid)
+                this.props.uoa.splice(i, 1);
+        }
+        this.update();
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
@@ -315,14 +333,15 @@ class UoaScreen extends Component {
                     <h5>Filter by</h5>
                     <div className="filter_field_containers">
                         <label htmlFor="date_filter">Date</label>
-                        <input type="date" name="date_filter" className="filter_fields" onChange={this.handleChange}/>
+                        <input type="date" name="date_filter" className="filter_fields" id="date_filter" onChange={this.handleChange}/>
                     </div>
                     <div className="filter_field_containers">
                         <label htmlFor="ticker_filter">Ticker</label>
-                        <input type="text" name="ticker_filter" className="filter_fields" onChange={this.handleChange}/>
+                        <input type="text" name="ticker_filter" className="filter_fields" id="ticker_filter" onChange={this.handleChange}/>
                     </div>
                     <div className="filter_button_container">
                         <button className="filter_button" onClick={this.handleFilter}>Search</button>
+                        <button className="filter_button" onClick={this.handleReset}>Reset</button>
                     </div>
                 </div>
 
@@ -357,7 +376,8 @@ class UoaScreen extends Component {
                         </div>
                     </div>
                 </div>
-                {this.state.filtering ? <UoaLinks uoa={this.state.filtered_elements} deleteAndUpdate={this.update}/> : <UoaLinks uoa={this.props.uoa} deleteAndUpdate={this.update}/>}
+                {this.state.filtering ? <UoaLinks uoa={this.state.filtered_elements} filtering={this.state.filtering} deleteFromMain={this.deleteFromMain}/> 
+                    : <UoaLinks uoa={this.props.uoa} filtering={this.state.filtering} deleteFromMain={this.deleteFromMain}/>}
                 <br />
                 <div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>
                 

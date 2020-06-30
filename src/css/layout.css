@@ -247,7 +247,7 @@ button:active {
 }
 
 .filter_button {
-    margin: auto;
+    margin-right: 1%;
 }
 
 .filter_button_container {
