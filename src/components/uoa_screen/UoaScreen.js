@@ -23,7 +23,9 @@ class UoaScreen extends Component {
         deets: '',
         premium: '',
         date_filter: '',
-        ticker_filter: ''
+        ticker_filter: '',
+        filtered_elements: [],
+        filtering: false
     }
 
     componentDidMount = () => {
@@ -95,8 +97,7 @@ class UoaScreen extends Component {
             order: this.state.order,
             deets: this.state.deets,
             premium: this.state.premium,
-            uid: uuid.v4(),
-            hidden: false
+            uid: uuid.v4()
         };
         this.props.uoa.push(newOption);
         this.hideAndClear();
@@ -278,10 +279,29 @@ class UoaScreen extends Component {
     }
 
     handleFilter = () => {
-        /*
-            filter idea:
-            make a new field called hidden or something, mark true if filtered out and then in UoaCard, dont render anything if it's hidden
-        */
+        if(this.state.date_filter === "" && this.state.ticker_filter === "") {
+            this.setState({filtering: false, filtered_elements: []});
+            return;
+        }
+
+        this.setState({filtered_elements: []}, () => {
+            let date_req = this.state.date_filter;
+            let ticker_req = this.state.ticker_filter.toUpperCase();
+            for(let i = this.props.uoa.length - 1; i >= 0; i--) {
+                let current = this.props.uoa[i];
+                if(this.state.date_filter === "")
+                    date_req = current.date;
+                if(this.state.ticker_filter === "")
+                    ticker_req = current.ticker;
+                if(date_req === current.date && ticker_req === current.ticker)
+                    this.state.filtered_elements.push(current);
+                date_req = this.state.date_filter;
+                ticker_req = this.state.ticker_filter.toUpperCase();
+            }
+            this.setState({filtering: true}, () => {
+                console.log(this.state.filtered_elements);
+            });
+        });
     }
 
     render() {
@@ -307,37 +327,37 @@ class UoaScreen extends Component {
                 </div>
 
                 <div className="uoa_container">
-                    <div className="uoa_header_card">
-                        <div className="date_header" onClick={this.sortByDate}>
+                    <div className="uoa_header_card non-sortable">
+                        <div className="date_header sortable" onClick={this.sortByDate}>
                             Date
                         </div>
-                        <div className="ticker_header" onClick={this.sortByTicker}>
+                        <div className="ticker_header sortable" onClick={this.sortByTicker}>
                             Ticker
                         </div>
-                        <div className="type_header" onClick={this.sortByType}>
+                        <div className="type_header">
                             Type
                         </div>
-                        <div className="strike_header" onClick={this.sortByStrike}>
+                        <div className="strike_header">
                             Strike
                         </div>
-                        <div className="expiry_header" onClick={this.sortByExpiry}>
+                        <div className="expiry_header sortable" onClick={this.sortByExpiry}>
                             Expiry
                         </div>
-                        <div className="spot_header" onClick={this.sortBySpot}>
+                        <div className="spot_header">
                             Spot
                         </div>
-                        <div className="order_header" onClick={this.sortByOrder}>
+                        <div className="order_header">
                             Order
                         </div>
                         <div className="deets_header">
                             Deets
                         </div>
-                        <div className="premium_header" onClick={this.sortByPremium}>
+                        <div className="premium_header">
                             Premium
                         </div>
                     </div>
                 </div>
-                <UoaLinks uoa={this.props.uoa} deleteAndUpdate={this.update} />
+                {this.state.filtering ? <UoaLinks uoa={this.state.filtered_elements} deleteAndUpdate={this.update}/> : <UoaLinks uoa={this.props.uoa} deleteAndUpdate={this.update}/>}
                 <br />
                 <div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>
                 
@@ -346,31 +366,31 @@ class UoaScreen extends Component {
                     <div className="form-container">
                         <div className="modal-field">
                             <label htmlFor="date" className="date_labels">Date</label>
-                            <input type="date" name="date" id="date_field" onChange={this.handleChange} />
+                            <input type="date" name="date" id="date_field" onChange={this.handleChange}/>
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="ticker">Ticker</label>
-                            <input type="text" name="ticker" id="ticker_field" onChange={this.handleChange} />
+                            <input type="text" name="ticker" id="ticker_field" onChange={this.handleChange}/>
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="strike">Strike</label>
-                            <input type="number" name="strike" id="strike_field" min="0" onChange={this.handleChange} />
+                            <input type="number" name="strike" id="strike_field" min="0" onChange={this.handleChange}/>
                         </div>
                         <div className="modal-field">
                             <label htmlFor="expiry" className="date_labels">Expiry</label>
-                            <input type="date" name="expiry" id="expiry_field" onChange={this.handleChange} />
+                            <input type="date" name="expiry" id="expiry_field" onChange={this.handleChange}/>
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="spot">Spot</label>
-                            <input type="number" name="spot" id="spot_field" min="0" onChange={this.handleChange} />
+                            <input type="number" name="spot" id="spot_field" min="0" onChange={this.handleChange}/>
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="deets">Details</label>
-                            <input type="text" name="deets" id="deets_field" onChange={this.handleChange} />
+                            <input type="text" name="deets" id="deets_field" onChange={this.handleChange}/>
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="premium">Premium</label>
-                            <input type="number" name="premium" id="premium_field" min="0" onChange={this.handleChange} />
+                            <input type="number" name="premium" id="premium_field" min="0" onChange={this.handleChange}/>
                         </div>
                         <div className="modal-field">
                             <select className="dropdown" name="type" id="select_type" defaultValue={'DEFAULT'} onChange={this.handleChange}>

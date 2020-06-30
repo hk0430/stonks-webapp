@@ -63,7 +63,6 @@ body {
     margin-top: 3%;
     margin-bottom: 5px;
     border-radius: 5px;
-    cursor: pointer;
 }
 
 .date_header, .ticker_header, .type_header, .strike_header, .expiry_header, .spot_header, .order_header, .deets_header, .premium_header {
@@ -253,4 +252,8 @@ button:active {
 
 .filter_button_container {
     clear: both;
+}
+
+.sortable:hover {
+    cursor: pointer;
 }
