@@ -69,13 +69,22 @@ class UoaScreen extends Component {
 
     showModal = () => {
         this.setState({modalState: true});
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1;
+        let yyyy = today.getFullYear();
+        if(dd < 10)
+            dd = "0" + dd;
+        if(mm < 10)
+            mm = "0" + mm;
+        document.getElementById("date_field").value = mm + "/" + dd + "/" + yyyy;
+        this.setState({date: yyyy + "-" + mm + "-" + dd});
     }
 
     hideAndClear = () => {
         this.setState({
             modalState: false
         });
-        document.getElementById("date_field").value = "";
         document.getElementById("ticker_field").value = "";
         document.getElementById("strike_field").value = "";
         document.getElementById("expiry_field").value = "";
@@ -342,6 +351,7 @@ class UoaScreen extends Component {
                     <div className="filter_button_container">
                         <button className="filter_button" onClick={this.handleFilter}>Search</button>
                         <button className="filter_button" onClick={this.handleReset}>Reset</button>
+                        <button onClick={this.showModal}>Add a New Option</button>
                     </div>
                 </div>
 
@@ -379,14 +389,14 @@ class UoaScreen extends Component {
                 {this.state.filtering ? <UoaLinks uoa={this.state.filtered_elements} filtering={this.state.filtering} deleteFromMain={this.deleteFromMain}/> 
                     : <UoaLinks uoa={this.props.uoa} filtering={this.state.filtering} deleteFromMain={this.deleteFromMain}/>}
                 <br />
-                <div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>
+                {/*<div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>*/}
                 
                 <div className="modal" style={this.getStyle()}>
                     <span className="close" onClick={this.hideAndClear}>&times;</span>
                     <div className="form-container">
                         <div className="modal-field">
                             <label htmlFor="date" className="date_labels">Date</label>
-                            <input type="date" name="date" id="date_field" onChange={this.handleChange}/>
+                            <input type="text" name="date" id="date_field" disabled/>
                         </div>
                         <div className="input-field modal-field">
                             <label htmlFor="ticker">Ticker</label>
