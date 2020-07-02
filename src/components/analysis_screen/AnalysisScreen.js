@@ -4,9 +4,11 @@ import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
 
-import { updateUoa, fetchUserInfo } from '../../store/asynchHandler.js';
+import { fetchUserInfo } from '../../store/asynchHandler.js';
 
 class AnalysisScreen extends Component {
+    compo
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
@@ -14,7 +16,6 @@ class AnalysisScreen extends Component {
 
         return (
             <div className="container">
-                Analysis Screen
                 <h3>PLACEHOLDER - HERE YOU WILL SEE INFO LIKE:<br/>
                     NUMBERS AND STATS ON ANY TICKER FROM THE FLOW<br/>
                     DATE BREAKDOWN OF TICKER - WHAT WEEK DOES WHAT TICKER HAVE CALLS/PUTS EXPIRE<br/>
@@ -28,12 +29,13 @@ class AnalysisScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        auth: state.firebase.auth
+        auth: state.firebase.auth,
+        uoa: state.manager.currentUoa
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-
+    fetchUserInfo: uid => dispatch(fetchUserInfo(uid))
 });
 
 export default compose(

@@ -191,8 +191,8 @@ button:active {
 }
 
 .card:hover {
-    background-color: #4D4D4D;
-    color: red;
+    font-size: 115%;
+    color: green;
 }
 
 .modal {
@@ -246,11 +246,11 @@ button:active {
     float: left;
 }
 
-.filter_button {
+.commands {
     margin-right: 1%;
 }
 
-.filter_button_container {
+.commands_container {
     clear: both;
 }
 

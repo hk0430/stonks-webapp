@@ -109,6 +109,7 @@ class UoaScreen extends Component {
             uid: uuid.v4()
         };
         this.props.uoa.push(newOption);
+        this.handleFilter();
         this.hideAndClear();
         this.update();
     }
@@ -222,62 +223,12 @@ class UoaScreen extends Component {
         this.sortIt();
     }
 
-    sortByType = () => {
-        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_TYPE_INCREASING) {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_TYPE_DECREASING })
-        }
-        else {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_TYPE_INCREASING })
-        }
-        this.sortIt();
-    }
-
-    sortByStrike = () => {
-        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_STRIKE_INCREASING) {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_STRIKE_DECREASING })
-        }
-        else {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_STRIKE_INCREASING })
-        }
-        this.sortIt();
-    }
-
     sortByExpiry = () => {
         if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_INCREASING) {
             this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_DECREASING })
         }
         else {
             this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_EXPIRY_INCREASING })
-        }
-        this.sortIt();
-    }
-
-    sortBySpot = () => {
-        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_SPOT_INCREASING) {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_SPOT_DECREASING })
-        }
-        else {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_SPOT_INCREASING })
-        }
-        this.sortIt();
-    }
-
-    sortByOrder = () => {
-        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_ORDER_INCREASING) {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_ORDER_DECREASING })
-        }
-        else {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_ORDER_INCREASING })
-        }
-        this.sortIt();
-    }
-
-    sortByPremium = () => {
-        if(this.state.sortBy === UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_INCREASING) {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_DECREASING })
-        }
-        else {
-            this.setState({ sortBy: UOA_SORTING_CRITERIA.SORT_BY_PREMIUM_INCREASING })
         }
         this.sortIt();
     }
@@ -331,6 +282,33 @@ class UoaScreen extends Component {
         this.update();
     }
 
+    importExcel = () => {
+        console.log("import :)");
+    }
+
+    exportExcel = () => {
+        console.log("export :)");
+        let data = [];
+        data.push(["date", "ticker", "type", "strike", "expiry", "spot", "order", "details", "premium"]);
+        for(let i = 0; i < this.props.uoa.length; i++) {
+            let x = this.props.uoa[i];
+            data.push([x.date, x.ticker, x.type, x.strike, x.expiry, x.spot, x.order, x.deets, x.premium]);
+        }
+        let csv = "";
+        data.forEach((rowItem, rowIndex) => {
+            rowItem.forEach((colItem, colIndex) => {
+              csv += colItem + ',';
+            });
+            csv += "\r\n";
+        });
+        csv = "data:application/csv," + encodeURIComponent(csv);
+        let file = document.createElement("A");
+        file.setAttribute("href", csv);
+        file.setAttribute("download","uoa.csv");
+        document.body.appendChild(file);
+        file.click();
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
@@ -348,10 +326,12 @@ class UoaScreen extends Component {
                         <label htmlFor="ticker_filter">Ticker</label>
                         <input type="text" name="ticker_filter" className="filter_fields" id="ticker_filter" onChange={this.handleChange}/>
                     </div>
-                    <div className="filter_button_container">
-                        <button className="filter_button" onClick={this.handleFilter}>Search</button>
-                        <button className="filter_button" onClick={this.handleReset}>Reset</button>
-                        <button onClick={this.showModal}>Add a New Option</button>
+                    <div className="commands_container">
+                        <button className="commands" onClick={this.handleFilter}>Search</button>
+                        <button className="commands" onClick={this.handleReset}>Reset</button>
+                        <button className="commands" onClick={this.importExcel}>Import</button>
+                        <button className="commands" onClick={this.exportExcel}>Export</button>
+                        <button className="commands" onClick={this.showModal}>Add a New Option</button>
                     </div>
                 </div>
 

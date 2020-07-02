@@ -14,7 +14,7 @@ class UoaCard extends Component {
 
         return (
             <div className="card z-depth-0">
-                <div className="card-content grey-text text-darken-3">
+                <div className="card-content">
                     <div className="option_date">{this.props.option.date}</div>
                     <div className="option_ticker">{this.props.option.ticker}</div>
                     <div className="option_type">{this.props.option.type}</div>
