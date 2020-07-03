@@ -232,13 +232,40 @@ button:active {
     margin-bottom: 2%;
 }
 
+.modal_warning {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    top: 20%;
+    width: 50%; /* Full width */
+    height: 15%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: lightgray;
+    color: black;
+    left: 25%;
+}
+
+.warning {
+    padding-top: 3%;
+    text-align: center;
+}
+
 .filter_fields {
     color: white;
 }
 
 .filter_field_containers {
     float: left;
-    margin-right: 5%;
+    margin-right: 3%;
+}
+
+.commands_container {
+    float: right;
+}
+
+.alpha {
+    margin-top: 2%;
+    margin-right: 2%;
 }
 
 .uoa_container {
@@ -249,14 +276,18 @@ button:active {
     float: left;
 }
 
-.commands {
+.bravo {
     margin-right: 1%;
 }
 
-.commands_container {
+.filters_container {
     clear: both;
 }
 
 .sortable:hover {
     cursor: pointer;
+}
+
+#csvfile {
+    width: 70%;
 }

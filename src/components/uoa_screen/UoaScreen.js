@@ -68,7 +68,8 @@ class UoaScreen extends Component {
             date_filter: '',
             ticker_filter: '',
             filtered_elements: [],
-            filtering: false
+            filtering: false,
+            wrongFile: false
         });
     }
 
@@ -81,9 +82,15 @@ class UoaScreen extends Component {
         }));
     }
 
-    getStyle = () => {
-        return {
-            display: this.state.modalState ? 'block' : 'none'
+    getStyle = (code) => {
+        if(code === 0) {
+            return {
+                display: this.state.modalState ? 'block' : 'none'
+            }
+        } else {
+            return {
+                display: this.state.wrongFile ? 'block' : 'none'
+            }
         }
     }
 
@@ -303,11 +310,11 @@ class UoaScreen extends Component {
     }
 
     importExcel = () => {
-        this.props.uoa.splice(0, this.props.uoa.length);
         let fileUpload = document.getElementById("csvfile");
         let regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv)$/;
         if(regex.test(fileUpload.value.toLowerCase())) {
             if(typeof(FileReader) != "undefined") {
+                this.props.uoa.splice(0, this.props.uoa.length);
                 let reader = new FileReader();
                 reader.onload = (e) => {
                     let rows = e.target.result.split("\n");
@@ -332,7 +339,13 @@ class UoaScreen extends Component {
                 }
                 reader.readAsText(fileUpload.files[0]);
             }
+        } else {
+            this.setState({wrongFile: true});
         }
+    }
+
+    hideWrongFile = () => {
+        this.setState({wrongFile: false});
     }
 
     exportExcel = () => {
@@ -375,12 +388,14 @@ class UoaScreen extends Component {
                         <input type="text" name="ticker_filter" className="filter_fields" id="ticker_filter" onChange={this.handleChange}/>
                     </div>
                     <div className="commands_container">
-                        <button className="commands" onClick={this.handleFilter}>Search</button>
-                        <button className="commands" onClick={this.handleReset}>Reset</button>
-                        <button className="commands" onClick={this.exportExcel}>Export</button>
-                        <button className="commands" onClick={this.importExcel}>Import</button>
-                        <input className="commands" type="file" id="csvfile"></input>
-                        <button className="commands" onClick={this.showModal}>Add a New Option</button>
+                        <button className="alpha" onClick={this.importExcel}>Import</button>
+                        <input className="alpha" type="file" id="csvfile"></input><br/>
+                        <button className="alpha" onClick={this.exportExcel}>Export</button><br/>
+                    </div>
+                    <div className="filters_container">
+                        <button className="bravo" onClick={this.handleFilter}>Search</button>
+                        <button className="bravo" onClick={this.handleReset}>Reset</button>
+                        <button className="bravo" onClick={this.showModal}>Add a New Option</button>
                     </div>
                 </div>
 
@@ -420,7 +435,7 @@ class UoaScreen extends Component {
                 <br />
                 {/*<div className="new_button_container"><button onClick={this.showModal}>Add a New Option</button></div>*/}
                 
-                <div className="modal" style={this.getStyle()}>
+                <div className="modal" style={this.getStyle(0)}>
                     <span className="close" onClick={this.hideAndClear}>&times;</span>
                     <div className="form-container">
                         <div className="modal-field">
@@ -468,6 +483,11 @@ class UoaScreen extends Component {
                         </div>
                         <div className="new_button_container"><button onClick={this.addNewOption}>Submit</button></div>
                     </div>
+                </div>
+
+                <div className="modal_warning" style={this.getStyle(1)}>
+                    <span className="close" onClick={this.hideWrongFile}>&times;</span>
+                    <h5 className="warning">Only .csv files will be accepted for imports.</h5>
                 </div>
             </div>
         );
