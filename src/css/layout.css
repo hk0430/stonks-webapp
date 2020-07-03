@@ -103,11 +103,15 @@ body {
     left: 95%;
 }
 
-.option_date, .option_ticker, .option_type, .option_strike, .option_expiry, .option_spot, .option_order, .option_deets, .option_premium, .option_delete {
+.option_icon, .option_date, .option_ticker, .option_type, .option_strike, .option_expiry, .option_spot, .option_order, .option_deets, .option_premium, .option_delete {
     position: absolute;
     top: 10%;
     font-size: 120%;
     color: white;
+}
+
+.option_icon {
+    left: -3%;
 }
 
 .option_date {
@@ -192,7 +196,6 @@ button:active {
 
 .card:hover {
     font-size: 115%;
-    color: green;
 }
 
 .modal {

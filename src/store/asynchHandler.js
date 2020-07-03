@@ -2,6 +2,7 @@ import * as actionCreators from './actionCreators.js';
 // import actionCodeSettings from '../config/emailAuthConfig';
 
 export const updateUoa = (uid, newUoa) => (dispatch, getState, { getFirestore }) => {
+  console.log(newUoa);
   const fireStore = getFirestore();
   fireStore.collection('users').doc(uid).update({
     uoa: newUoa

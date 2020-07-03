@@ -52,6 +52,26 @@ class UoaScreen extends Component {
         this.props.fetchUserInfo(this.props.auth.uid);
     }
 
+    resetState = () => {
+        this.setState({
+            sortBy: '',
+            modalState: false,
+            date: '',
+            ticker: '',
+            type: '',
+            strike: '',
+            expiry: '',
+            spot: '',
+            order: '',
+            deets: '',
+            premium: '',
+            date_filter: '',
+            ticker_filter: '',
+            filtered_elements: [],
+            filtering: false
+        });
+    }
+
     handleChange = (e) => {
         const { target } = e;
     
@@ -96,7 +116,7 @@ class UoaScreen extends Component {
     }
 
     addNewOption = () => {
-        var newOption = {
+        let newOption = {
             date: this.state.date,
             ticker: this.state.ticker.toUpperCase(),
             type: this.state.type,
@@ -283,11 +303,39 @@ class UoaScreen extends Component {
     }
 
     importExcel = () => {
-        console.log("import :)");
+        this.props.uoa.splice(0, this.props.uoa.length);
+        let fileUpload = document.getElementById("csvfile");
+        let regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv)$/;
+        if(regex.test(fileUpload.value.toLowerCase())) {
+            if(typeof(FileReader) != "undefined") {
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    let rows = e.target.result.split("\n");
+                    for (let i = 1; i < rows.length - 1; i++) {
+                        let optionStr = rows[i].split(",");
+                        let option = {
+                            date: optionStr[0],
+                            ticker: optionStr[1],
+                            type: optionStr[2],
+                            strike: optionStr[3],
+                            expiry: optionStr[4],
+                            spot: optionStr[5],
+                            order: optionStr[6],
+                            deets: optionStr[7],
+                            premium: optionStr[8],
+                            uid: uuid.v4()
+                        }
+                        this.props.uoa.push(option);
+                    }
+                    this.update();
+                    this.resetState();
+                }
+                reader.readAsText(fileUpload.files[0]);
+            }
+        }
     }
 
     exportExcel = () => {
-        console.log("export :)");
         let data = [];
         data.push(["date", "ticker", "type", "strike", "expiry", "spot", "order", "details", "premium"]);
         for(let i = 0; i < this.props.uoa.length; i++) {
@@ -329,8 +377,9 @@ class UoaScreen extends Component {
                     <div className="commands_container">
                         <button className="commands" onClick={this.handleFilter}>Search</button>
                         <button className="commands" onClick={this.handleReset}>Reset</button>
-                        <button className="commands" onClick={this.importExcel}>Import</button>
                         <button className="commands" onClick={this.exportExcel}>Export</button>
+                        <button className="commands" onClick={this.importExcel}>Import</button>
+                        <input className="commands" type="file" id="csvfile"></input>
                         <button className="commands" onClick={this.showModal}>Add a New Option</button>
                     </div>
                 </div>
