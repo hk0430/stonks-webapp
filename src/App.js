@@ -10,6 +10,7 @@ import LoginScreen from './components/login_screen/LoginScreen.js';
 import HomeScreen from './components/home_screen/HomeScreen.js';
 import UoaScreen from './components/uoa_screen/UoaScreen.js';
 import AnalysisScreen from './components/analysis_screen/AnalysisScreen.js';
+import Test from './components/test/Test.js';
 
 class App extends Component {
   render() {
@@ -25,6 +26,7 @@ class App extends Component {
               <Route path="/login" component={LoginScreen} />
               <Route path="/uoa" component={UoaScreen} />
               <Route path="/analysis" component={AnalysisScreen} />
+              <Route path="/test" component={Test} />
               <Route path="/:any" component={HomeScreen} />
             </Switch>
           </div>

@@ -291,3 +291,12 @@ button:active {
 #csvfile {
     width: 70%;
 }
+
+.test_container {
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    top: 10%;
+    width: 50%; /* Full width */
+    height: 30%; /* Full height */
+    left: 20%;
+}

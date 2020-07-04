@@ -1,5 +1,23 @@
 import * as actionCreators from './actionCreators.js';
-// import actionCodeSettings from '../config/emailAuthConfig';
+
+export const uploadTickersToDb = (data) => (dispatch, getState, { getFirestore }) => {
+  const fireStore = getFirestore();
+  for(let i = 0; i < data.length; i++) {
+    let current = data[i];
+    fireStore.collection("tickers").doc(current.uid).set({
+      ticker: current.ticker,
+      name: current.name,
+      market_cap: current.market_cap,
+      ipo_year: current.ipo_year,
+      sector: current.sector,
+      industry: current.industry
+    }).then(() => {
+      console.log("Successfully added ticker " + i);
+    }).catch((err) => {
+      console.log("Ah shit " + err);
+    });
+  }
+};
 
 export const updateUoa = (uid, newUoa) => (dispatch, getState, { getFirestore }) => {
   console.log(newUoa);

@@ -7,8 +7,6 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { fetchUserInfo } from '../../store/asynchHandler.js';
 
 class AnalysisScreen extends Component {
-    compo
-
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
@@ -20,14 +18,13 @@ class AnalysisScreen extends Component {
                     NUMBERS AND STATS ON ANY TICKER FROM THE FLOW<br/>
                     DATE BREAKDOWN OF TICKER - WHAT WEEK DOES WHAT TICKER HAVE CALLS/PUTS EXPIRE<br/>
                     WHAT SECTORS OF SPY DOES EACH TICKER FALL INTO - SECTOR BREAKDOWN<br/>
-                    ALSO REMEMBER TO IMPLEMENT EXCEL IMPORT/EXPORT FOR UOA
                     </h3>
             </div>
         );
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
         auth: state.firebase.auth,
         uoa: state.manager.currentUoa
