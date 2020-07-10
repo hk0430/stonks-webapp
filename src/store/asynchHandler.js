@@ -1,5 +1,25 @@
 import * as actionCreators from './actionCreators.js';
 
+export const retrieveTickers = () => (dispatch, getState, { getFirestore }) => {
+  const fireStore = getFirestore();
+  let output = [];
+  fireStore.collection("tickers").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+        let company = {
+          uid: doc.id,
+          ticker: doc.id,
+          name: doc.data().name,
+          market_cap: doc.data().market_cap,
+          ipo_year: doc.data().ipo_year,
+          sector: doc.data().sector,
+          industry: doc.data().industry
+        }
+        output.push(company);
+    });
+    dispatch({ type: actionCreators.EXPORT_TICKERS, payload: output });
+  });
+};
+
 export const uploadTickersToDb = (data) => (dispatch, getState, { getFirestore }) => {
   const fireStore = getFirestore();
   for(let i = 0; i < data.length; i++) {

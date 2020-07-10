@@ -3,11 +3,17 @@ import * as actionCreators from './actionCreators.js';
 const initState = {
     currentScreen: '',
     currentUsername: '',
-    currentUoa: []
+    currentUoa: [],
+    tickers: []
 };
 
 const stateReducer = (state = initState, action) => {
     switch (action.type) {
+        case actionCreators.EXPORT_TICKERS:
+            return {
+                ...state,
+                tickers: action.payload
+            }
         case actionCreators.CURRENT_USER_UPDATE:
             return {
                 ...state,

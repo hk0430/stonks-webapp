@@ -4,12 +4,11 @@ import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
 
-import { uploadTickersToDb } from '../../store/asynchHandler.js';
+import { uploadTickersToDb, retrieveTickers } from '../../store/asynchHandler.js';
 
 class Test extends Component {
     state = {
-        data: [],
-        tickers: {}
+        data: []
     }
 
     importData = () => {
@@ -62,6 +61,32 @@ class Test extends Component {
         this.props.uploadTickersToDb(this.state.data);
     }
 
+    loadData = () => {
+        this.props.retrieveTickers();
+    }
+
+    exportData = () => {
+        let data = [];
+        data.push(["ticker", "name", "intentionally empty", "market cap", "ipo year", "sector", "industry"]);
+        for(let i = 0; i < this.props.uoa.length; i++) {
+            let x = this.props.tickers[i];
+            data.push([x.ticker, x.name, "", x.market_cap, x.ipo_year, x.sector, x.industry]);
+        }
+        let csv = "";
+        data.forEach((rowItem, rowIndex) => {
+            rowItem.forEach((colItem, colIndex) => {
+              csv += colItem + ',';
+            });
+            csv += "\r\n";
+        });
+        csv = "data:application/csv," + encodeURIComponent(csv);
+        let file = document.createElement("A");
+        file.setAttribute("href", csv);
+        file.setAttribute("download","tickers.csv");
+        document.body.appendChild(file);
+        file.click();
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
@@ -75,7 +100,9 @@ class Test extends Component {
                     <p>Data pulled from NASDAQ, NYSE, AMEX</p><br/>
                     <input type="file" id="ticker_data"></input><br/>
                     <button onClick={this.importData}>Import</button><br/>
-                    <button onClick={this.uploadDataToDb}>Update DB</button>
+                    <button onClick={this.uploadDataToDb}>Update DB</button><br/>
+                    <button onClick={this.loadData}>Load</button>
+                    <button onClick={this.exportData}>Export</button>
                 </div>)
         } else {
             return (
@@ -90,12 +117,14 @@ class Test extends Component {
 const mapStateToProps = (state) => {
     return {
         auth: state.firebase.auth,
-        profile: state.firebase.profile
+        profile: state.firebase.profile,
+        tickers: state.manager.tickers
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    uploadTickersToDb : (data) => dispatch(uploadTickersToDb(data))
+    uploadTickersToDb : (data) => dispatch(uploadTickersToDb(data)),
+    retrieveTickers : () => dispatch(retrieveTickers())
 });
 
 export default compose(

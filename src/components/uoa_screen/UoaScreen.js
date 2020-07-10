@@ -365,7 +365,7 @@ class UoaScreen extends Component {
         csv = "data:application/csv," + encodeURIComponent(csv);
         let file = document.createElement("A");
         file.setAttribute("href", csv);
-        file.setAttribute("download","uoa.csv");
+        file.setAttribute("download","flow.csv");
         document.body.appendChild(file);
         file.click();
     }
