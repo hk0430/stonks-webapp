@@ -68,7 +68,7 @@ class Test extends Component {
     exportData = () => {
         let data = [];
         data.push(["ticker", "name", "intentionally empty", "market cap", "ipo year", "sector", "industry"]);
-        for(let i = 0; i < this.props.uoa.length; i++) {
+        for(let i = 0; i < this.props.tickers.length; i++) {
             let x = this.props.tickers[i];
             data.push([x.ticker, x.name, "", x.market_cap, x.ipo_year, x.sector, x.industry]);
         }
@@ -82,7 +82,7 @@ class Test extends Component {
         csv = "data:application/csv," + encodeURIComponent(csv);
         let file = document.createElement("A");
         file.setAttribute("href", csv);
-        file.setAttribute("download","tickers.csv");
+        file.setAttribute("download", "tickers.csv");
         document.body.appendChild(file);
         file.click();
     }
