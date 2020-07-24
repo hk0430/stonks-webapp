@@ -7,6 +7,10 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { fetchUserInfo } from '../../store/asynchHandler.js';
 
 class AnalysisScreen extends Component {
+    componentDidMount = () => {
+        this.props.fetchUserInfo(this.props.auth.uid);
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
@@ -14,11 +18,9 @@ class AnalysisScreen extends Component {
 
         return (
             <div className="container">
-                <h3>PLACEHOLDER - HERE YOU WILL SEE INFO LIKE:<br/>
-                    NUMBERS AND STATS ON ANY TICKER FROM THE FLOW<br/>
-                    DATE BREAKDOWN OF TICKER - WHAT WEEK DOES WHAT TICKER HAVE CALLS/PUTS EXPIRE<br/>
-                    WHAT SECTORS OF SPY DOES EACH TICKER FALL INTO - SECTOR BREAKDOWN<br/>
-                    </h3>
+                <h3>
+                    {this.props.uoa.length}
+                </h3>
             </div>
         );
     }

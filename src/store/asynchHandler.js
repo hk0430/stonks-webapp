@@ -1,5 +1,18 @@
 import * as actionCreators from './actionCreators.js';
 
+export const updateDataCollection = (data) => (dispatch, getState, { getFirestore }) => {
+  console.log("yeet");
+  console.log(data);
+  const fireStore = getFirestore();
+  fireStore.collection('data').doc('tickers').set({
+    companies: data
+  }).then(() => {
+    console.log("data->tickers->companies updated");
+  }).catch((err) => {
+    console.log(err);
+  });
+}
+
 export const retrieveTickers = () => (dispatch, getState, { getFirestore }) => {
   const fireStore = getFirestore();
   let output = [];

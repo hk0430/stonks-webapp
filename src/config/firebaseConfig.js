@@ -5,14 +5,14 @@ import 'firebase/auth';
 // THIS IS USED TO INITIALIZE THE firebase OBJECT
 // PUT YOUR FIREBASE PROJECT CONFIG STUFF HERE
 var firebaseConfig = {
-    apiKey: "AIzaSyAqFqM0-V7pRMZ2RLAdAq2Sqr6TD08NYgU",
-    authDomain: "summer2020-fd7f4.firebaseapp.com",
-    databaseURL: "https://summer2020-fd7f4.firebaseio.com",
-    projectId: "summer2020-fd7f4",
-    storageBucket: "summer2020-fd7f4.appspot.com",
-    messagingSenderId: "845965454145",
-    appId: "1:845965454145:web:12225e63d7ad99a0aa0fc0",
-    measurementId: "G-GXFZLJYJHK"
+    apiKey: "AIzaSyDr2IZCMKqRHkGZ5vmaF7So0M0QhczGAsk",
+    authDomain: "summer2020-a2ae0.firebaseapp.com",
+    databaseURL: "https://summer2020-a2ae0.firebaseio.com",
+    projectId: "summer2020-a2ae0",
+    storageBucket: "summer2020-a2ae0.appspot.com",
+    messagingSenderId: "711657761055",
+    appId: "1:711657761055:web:9f3f6550f05c18fa05682a",
+    measurementId: "G-XBCZ9L2MV6"
 };
 firebase.initializeApp(firebaseConfig);
 

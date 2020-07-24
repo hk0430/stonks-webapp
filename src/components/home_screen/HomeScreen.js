@@ -24,6 +24,11 @@ class HomeScreen extends Component {
                 <h4>Welcome, { this.props.username }. Hope you have a great trading day!</h4>
                 <br/>
                 <h3>PLACEHOLDER - HERE YOU WILL SEE MARKET NEWS ON TICKERS THAT IS IN YOUR UOA</h3>
+                <h5>
+                    Current issues at hand:<br/>
+                    1. fix refresh issue using local storage<br/>
+                    2. implement binary search on tickers to quickly find a particular ticker (for sector breakdown analysis)<br/>
+                </h5>
             </div>
         );
     }
