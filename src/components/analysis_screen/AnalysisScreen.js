@@ -11,6 +11,21 @@ class AnalysisScreen extends Component {
         this.props.fetchUserInfo(this.props.auth.uid);
     }
 
+    binarySearchString = (data, target) => {
+        let l = 0;
+        let r = data.length - 1; 
+        while (l <= r) { 
+            let m = Math.ceil(l + (r - l) / 2); 
+            let res = target.localeCompare(data[m]); 
+  
+            if (res == 0) return m; 
+            if (res > 0) l = m + 1;
+            else r = m - 1; 
+        } 
+  
+        return -1; 
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;

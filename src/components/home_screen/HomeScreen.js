@@ -27,7 +27,6 @@ class HomeScreen extends Component {
                 <h5>
                     Current issues at hand:<br/>
                     1. fix refresh issue using local storage<br/>
-                    2. implement binary search on tickers to quickly find a particular ticker (for sector breakdown analysis)<br/>
                 </h5>
             </div>
         );
