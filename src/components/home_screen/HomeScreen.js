@@ -10,7 +10,6 @@ import { fetchUserInfo } from '../../store/asynchHandler';
 
 class HomeScreen extends Component {
     componentDidMount = () => {
-        this.props.fetchUserInfo(this.props.auth.uid);
         this.props.updateScreen(APP_SCREEN.LOGIN_SCREEN);
     }
 
@@ -26,7 +25,6 @@ class HomeScreen extends Component {
                 <h3>PLACEHOLDER - HERE YOU WILL SEE MARKET NEWS ON TICKERS THAT IS IN YOUR UOA</h3>
                 <h5>
                     Current issues at hand:<br/>
-                    1. fix refresh issue using local storage<br/>
                 </h5>
             </div>
         );

@@ -7,10 +7,6 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { fetchUserInfo } from '../../store/asynchHandler.js';
 
 class AnalysisScreen extends Component {
-    componentDidMount = () => {
-        this.props.fetchUserInfo(this.props.auth.uid);
-    }
-
     binarySearchString = (data, target) => {
         let l = 0;
         let r = data.length - 1; 
@@ -18,7 +14,7 @@ class AnalysisScreen extends Component {
             let m = Math.ceil(l + (r - l) / 2); 
             let res = target.localeCompare(data[m]); 
   
-            if (res == 0) return m; 
+            if (res === 0) return m; 
             if (res > 0) l = m + 1;
             else r = m - 1; 
         } 

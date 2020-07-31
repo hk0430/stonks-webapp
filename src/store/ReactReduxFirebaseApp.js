@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+// also known as store.js
 import React from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
@@ -8,6 +9,8 @@ import { ReactReduxFirebaseProvider, getFirebase } from 'react-redux-firebase';
 import firebase from '../config/firebaseConfig';
 import rootReducer from './rootReducer';
 import App from '../App';
+import { loadState, saveState } from './localStorage.js';
+import throttle from 'lodash/throttle';
 
 class ReactReduxFirebaseApp extends React.Component {
     constructor(props) {
@@ -24,13 +27,19 @@ class ReactReduxFirebaseApp extends React.Component {
             attachAuthIsReady: true,
         };
 
-        const store = createStore(rootReducer,
+        const persistedState = loadState();
+
+        const store = createStore(rootReducer, persistedState,
             composeEnhancers(
                 applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
                 reduxFirestore(firebase), // still need this line to get access to firestore via getFirestore function (in projectActions, for example)
             )
         );
-
+        
+        store.subscribe(throttle(() => {
+            saveState(store.getState());
+        }, 1000));
+        
         const rrfProps = {
             firebase,
             config: rrfConfig,

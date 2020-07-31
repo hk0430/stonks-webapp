@@ -28,30 +28,6 @@ class UoaScreen extends Component {
         filtering: false
     }
 
-    componentDidMount = () => {
-        /*
-        var promise = new Promise((resolve, reject) => {
-            var res = this.props.fetchUserInfo(this.props.auth.uid);
-            console.log(res);
-            if (res === true) {
-              resolve("Proceed to set state");
-            }
-            else {
-              reject(Error("Do not proceed"));
-            }
-        });
-        promise.then(() => {
-            console.log(this.props.uoa);
-            this.setState({ filtered: this.props.uoa }, () => {
-                console.log(this.state);
-            });
-        }, (err) => {
-            console.log("Failed to set state");
-        })
-        */
-        this.props.fetchUserInfo(this.props.auth.uid);
-    }
-
     resetState = () => {
         this.setState({
             sortBy: '',
