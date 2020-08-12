@@ -9,7 +9,7 @@ const initState = {
 
 const stateReducer = (state = initState, action) => {
     switch (action.type) {
-        case actionCreators.EXPORT_TICKERS:
+        case actionCreators.RETRIEVE_COMPANIES:
             return {
                 ...state,
                 tickers: action.payload

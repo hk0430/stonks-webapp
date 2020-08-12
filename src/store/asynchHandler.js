@@ -1,57 +1,53 @@
 import * as actionCreators from './actionCreators.js';
 
-export const updateDataCollection = (data) => (dispatch, getState, { getFirestore }) => {
-  console.log("yeet");
-  console.log(data);
+/*
+  retrieve an array of objects where each object represents a company and its information as follows
+    ticker
+    company name
+    market cap
+    ipo year
+    sector
+    industry
+*/
+export const retrieveCompanies = () => (dispatch, getState, { getFirestore }) => {
+  let companies = [];
   const fireStore = getFirestore();
-  fireStore.collection('data').doc('tickers').set({
-    companies: data
+  fireStore.collection('data').doc('market').get().then((doc) => {
+    if(doc.exists) {
+      companies = doc.data().companies
+    }
   }).then(() => {
-    console.log("data->tickers->companies updated");
+    console.log("market->companies fetched");
+    dispatch({ type: actionCreators.RETRIEVE_COMPANIES, payload: companies });
+  }).catch((error) => {
+    console.log("Error getting market->companies:", error);
+  });
+}
+
+/*
+  update collection data, document market with an array of objects, where each object represents a company with the following information:
+    ticker
+    company name
+    market cap
+    ipo year
+    sector
+    industry
+*/
+export const updateDataCollection = (companies, sectors) => (dispatch, getState, { getFirestore }) => {
+  const fireStore = getFirestore();
+  fireStore.collection('data').doc('market').set({
+    companies: companies,
+    sectors: sectors
+  }).then(() => {
+    console.log("market->companies updated");
   }).catch((err) => {
     console.log(err);
   });
 }
 
-export const retrieveTickers = () => (dispatch, getState, { getFirestore }) => {
-  const fireStore = getFirestore();
-  let output = [];
-  fireStore.collection("tickers").get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-        let company = {
-          uid: doc.id,
-          ticker: doc.id,
-          name: doc.data().name,
-          market_cap: doc.data().market_cap,
-          ipo_year: doc.data().ipo_year,
-          sector: doc.data().sector,
-          industry: doc.data().industry
-        }
-        output.push(company);
-    });
-    dispatch({ type: actionCreators.EXPORT_TICKERS, payload: output });
-  });
-};
-
-export const uploadTickersToDb = (data) => (dispatch, getState, { getFirestore }) => {
-  const fireStore = getFirestore();
-  for(let i = 0; i < data.length; i++) {
-    let current = data[i];
-    fireStore.collection("tickers").doc(current.uid).set({
-      ticker: current.ticker,
-      name: current.name,
-      market_cap: current.market_cap,
-      ipo_year: current.ipo_year,
-      sector: current.sector,
-      industry: current.industry
-    }).then(() => {
-      console.log("Successfully added ticker " + i);
-    }).catch((err) => {
-      console.log("Ah shit " + err);
-    });
-  }
-};
-
+/*
+  update the array of option flows for a specific user
+*/
 export const updateUoa = (uid, newUoa) => (dispatch, getState, { getFirestore }) => {
   console.log(newUoa);
   const fireStore = getFirestore();
@@ -64,6 +60,11 @@ export const updateUoa = (uid, newUoa) => (dispatch, getState, { getFirestore })
   });
 };
 
+/*
+  retrieve the following user information:
+    username
+    option flow data
+*/
 export const fetchUserInfo = uid => (dispatch, getState, { getFirestore }) => {
   var username = '';
   var uoa = [];

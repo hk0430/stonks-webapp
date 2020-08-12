@@ -84,6 +84,9 @@ class UoaScreen extends Component {
         this.setState({date: yyyy + "-" + mm + "-" + dd});
     }
 
+    /*
+        hides the modal and clear the fields of the inputs
+    */
     hideAndClear = () => {
         this.setState({
             modalState: false

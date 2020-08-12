@@ -4,11 +4,12 @@ import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
 
-import { uploadTickersToDb, retrieveTickers, updateDataCollection } from '../../store/asynchHandler.js';
+import { updateDataCollection, retrieveCompanies } from '../../store/asynchHandler.js';
 
 class Test extends Component {
     state = {
-        data: []
+        data: [],
+        sectors: new Map()
     }
 
     importData = () => {
@@ -29,6 +30,7 @@ class Test extends Component {
                         industry: optionStr[6]
                     }
                     this.state.data.push(company);
+                    this.state.sectors.set(company.sector, 0);
                 }
                 this.sortByTicker();
                 console.log(this.state.data);
@@ -37,7 +39,7 @@ class Test extends Component {
         }
     }
 
-    compare = (item1, item2) => {
+    compareTickers = (item1, item2) => {
         if(item1.ticker < item2.ticker)
             return -1;
         else if(item1.ticker > item2.ticker)
@@ -46,19 +48,17 @@ class Test extends Component {
             return 0;
     }
 
-    sortByTicker = () => {
-        this.state.data.sort(this.compare);
+    compareSectors = (item1, item2) => {
+        if(item1 < item2)
+            return -1;
+        else if(item1 > item2)
+            return 1;
+        else
+            return 0;
     }
 
-    uploadDataToDb = () => {
-        for(let i = this.state.data.length - 1; i > 0; i--) {
-            let current = this.state.data[i];
-            let prev = this.state.data[i-1];
-            if(current.uid === prev.uid)
-                this.state.data.splice(i, 1);
-        }
-        console.log(this.state.data.length);
-        this.props.uploadTickersToDb(this.state.data);
+    sortByTicker = () => {
+        this.state.data.sort(this.compareTickers);
     }
 
     uploadDataToDataCollection = () => {
@@ -69,14 +69,16 @@ class Test extends Component {
                 this.state.data.splice(i, 1);
         }
         console.log(this.state.data.length);
-        this.props.updateDataCollection(this.state.data);
+        console.log(Array.from(this.state.sectors.keys()).sort(this.compareSectors));
+        this.props.updateDataCollection(this.state.data, Array.from(this.state.sectors.keys()).sort(this.compareSectors));
     }
 
     loadData = () => {
-        this.props.retrieveTickers();
+        this.props.retrieveCompanies();
     }
 
     exportData = () => {
+        console.log(this.props.tickers);
         let data = [];
         data.push(["ticker", "name", "intentionally empty", "market cap", "ipo year", "sector", "industry"]);
         for(let i = 0; i < this.props.tickers.length; i++) {
@@ -111,8 +113,7 @@ class Test extends Component {
                     <p>Data pulled from NASDAQ, NYSE, AMEX</p><br/>
                     <input type="file" id="ticker_data"></input><br/>
                     <button onClick={this.importData}>Import</button><br/>
-                    <button onClick={this.uploadDataToDb}>Update DB</button><br/>
-                    <button onClick={this.uploadDataToDataCollection}>Update DB in data collection</button><br/>
+                    <button onClick={this.uploadDataToDataCollection}>Update DB in data collection</button><br/><br/><br/>
                     <button onClick={this.loadData}>Load</button>
                     <button onClick={this.exportData}>Export</button>
                 </div>)
@@ -135,9 +136,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    uploadTickersToDb : (data) => dispatch(uploadTickersToDb(data)),
-    retrieveTickers : () => dispatch(retrieveTickers()),
-    updateDataCollection : (data) => dispatch(updateDataCollection(data))
+    retrieveCompanies : () => dispatch(retrieveCompanies()),
+    updateDataCollection : (companies, sectors) => dispatch(updateDataCollection(companies, sectors))
 });
 
 export default compose(

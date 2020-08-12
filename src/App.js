@@ -9,7 +9,6 @@ import RegisterScreen from './components/register_screen/RegisterScreen.js';
 import LoginScreen from './components/login_screen/LoginScreen.js';
 import HomeScreen from './components/home_screen/HomeScreen.js';
 import UoaScreen from './components/uoa_screen/UoaScreen.js';
-import AnalysisScreen from './components/analysis_screen/AnalysisScreen.js';
 import Test from './components/test/Test.js';
 
 class App extends Component {
@@ -24,8 +23,7 @@ class App extends Component {
               <Route exact path="/" component={HomeScreen} />
               <Route path="/register" component={RegisterScreen} />
               <Route path="/login" component={LoginScreen} />
-              <Route path="/uoa" component={UoaScreen} />
-              <Route path="/analysis" component={AnalysisScreen} />
+              <Route path="/flow" component={UoaScreen} />
               <Route path="/test" component={Test} />
               <Route path="/:any" component={HomeScreen} />
             </Switch>
