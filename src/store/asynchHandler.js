@@ -85,13 +85,19 @@ export const fetchUserInfo = uid => (dispatch, getState, { getFirestore }) => {
   });
 };
 
-export const loginHandler = ({ credentials, firebase }) => (dispatch, getState) => {
+export const loginHandler = ({ credentials, firebase }) => (dispatch, getState, { getFirestore }) => {
   firebase.auth().signInWithEmailAndPassword(
     credentials.email,
     credentials.password,
   ).then(() => {
     console.log("LOGIN_SUCCESS");
     dispatch({ type: actionCreators.LOGIN_SUCCESS });
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.uid);
+        fetchUserInfo(user.uid)(dispatch, getState, { getFirestore });
+      }
+    });
   }).catch((err) => {
     dispatch({ type: actionCreators.LOGIN_ERROR, err });
   });

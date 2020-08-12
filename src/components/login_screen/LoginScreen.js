@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 import { loginHandler } from '../../store/asynchHandler';
 import { APP_SCREEN } from '../../store/constants';
 import { updateScreen } from '../../store/actionCreators';
+import { retrieveCompanies } from '../../store/asynchHandler';
 
 class LoginScreen extends Component {
   state = {
@@ -16,6 +17,7 @@ class LoginScreen extends Component {
 
   componentDidMount = () => {
     this.props.updateScreen(APP_SCREEN.LOGIN_SCREEN);
+    this.props.retrieveCompanies();     // doing this here instead of home screen to save some loading time in home screen (data will be saved in localstorage and retrieved in home screen)
   }
 
   handleChange = (e) => {
@@ -80,7 +82,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   login: authData => dispatch(loginHandler(authData)),
-  updateScreen: newScreen => dispatch(updateScreen(newScreen))
+  updateScreen: newScreen => dispatch(updateScreen(newScreen)),
+  retrieveCompanies: () => dispatch(retrieveCompanies())
 });
 
 // We need firebaseConnect function to provide to this component

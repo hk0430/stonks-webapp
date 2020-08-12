@@ -6,7 +6,6 @@ import { firestoreConnect } from 'react-redux-firebase';
 
 import { APP_SCREEN } from '../../store/constants';
 import { updateScreen } from '../../store/actionCreators';
-import { fetchUserInfo, retrieveCompanies } from '../../store/asynchHandler';
 
 /*
     comments on localstorage
@@ -29,8 +28,6 @@ class HomeScreen extends Component {
 
     componentDidMount = () => {
         this.props.updateScreen(APP_SCREEN.LOGIN_SCREEN);
-        this.props.retrieveCompanies();
-        this.props.fetchUserInfo(this.props.auth.uid);
     }
 
     binarySearchString = (data, target) => {
@@ -64,7 +61,7 @@ class HomeScreen extends Component {
             return <Redirect to="/login" />;
         }
 
-        console.log(this.props.uoa[0].expiry);
+        console.log(this.props.auth.uid);
         return (
             <div className="dashboard container">
                 <h4>Welcome, { this.props.username }.</h4>
@@ -89,9 +86,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    updateScreen: newScreen => dispatch(updateScreen(newScreen)),
-    fetchUserInfo: uid => dispatch(fetchUserInfo(uid)),
-    retrieveCompanies: () => dispatch(retrieveCompanies())
+    updateScreen: newScreen => dispatch(updateScreen(newScreen))
 });
 
 export default compose(
