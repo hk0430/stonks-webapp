@@ -44,7 +44,7 @@ class ReactReduxFirebaseApp extends React.Component {
             firebase,
             config: rrfConfig,
             dispatch: store.dispatch,
-            createFirestoreInstance, // Create firestore instead of craete it in fbConfig.js
+            createFirestoreInstance, // Create firestore instead of create it in fbConfig.js
         };
 
         this.state = {

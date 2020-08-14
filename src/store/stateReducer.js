@@ -4,7 +4,8 @@ const initState = {
     currentScreen: '',
     currentUsername: '',
     currentUoa: [],
-    tickers: []
+    tickers: [],
+    sectors: []
 };
 
 const stateReducer = (state = initState, action) => {
@@ -12,7 +13,8 @@ const stateReducer = (state = initState, action) => {
         case actionCreators.RETRIEVE_COMPANIES:
             return {
                 ...state,
-                tickers: action.payload
+                tickers: action.companies,
+                sectors: action.sectors
             }
         case actionCreators.CURRENT_USER_UPDATE:
             return {

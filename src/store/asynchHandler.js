@@ -1,4 +1,14 @@
 import * as actionCreators from './actionCreators.js';
+/*
+  how localstorage comes into play:
+  right after we login the user, we call the retrieveCompanies and fetchUserInfo function to get the user's username, option flow and "public" data on the companies
+  this information will be fetched, dispatched, and saved to localstorage
+  this information will not need to be fetched again from the server since it is stored in localstorage
+  so a refresh on the page will not need an asych call to the database, instead, it will load this information from localstorage
+  we will only make a call to the database when we update the database (updateUoa)
+  when we fetch updated info from the database, we update the localstorage as well
+  this method lessen the strain on the server
+*/
 
 /*
   retrieve an array of objects where each object represents a company and its information as follows
@@ -11,14 +21,16 @@ import * as actionCreators from './actionCreators.js';
 */
 export const retrieveCompanies = () => (dispatch, getState, { getFirestore }) => {
   let companies = [];
+  let sectors = [];
   const fireStore = getFirestore();
   fireStore.collection('data').doc('market').get().then((doc) => {
     if(doc.exists) {
-      companies = doc.data().companies
+      companies = doc.data().companies;
+      sectors = doc.data().sectors;
     }
   }).then(() => {
     console.log("market->companies fetched");
-    dispatch({ type: actionCreators.RETRIEVE_COMPANIES, payload: companies });
+    dispatch({ type: actionCreators.RETRIEVE_COMPANIES, companies: companies, sectors: sectors });
   }).catch((error) => {
     console.log("Error getting market->companies:", error);
   });
@@ -55,6 +67,7 @@ export const updateUoa = (uid, newUoa) => (dispatch, getState, { getFirestore })
     uoa: newUoa
   }).then(() => {
     console.log("Uoa updated");
+    fetchUserInfo(uid)(dispatch, getState, { getFirestore });
   }).catch((err) => {
     console.log(err);
   });
@@ -92,9 +105,9 @@ export const loginHandler = ({ credentials, firebase }) => (dispatch, getState, 
   ).then(() => {
     console.log("LOGIN_SUCCESS");
     dispatch({ type: actionCreators.LOGIN_SUCCESS });
+    retrieveCompanies()(dispatch, getState, { getFirestore });
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user.uid);
+      if(user) {
         fetchUserInfo(user.uid)(dispatch, getState, { getFirestore });
       }
     });
@@ -122,21 +135,13 @@ export const registerHandler = (newUser, firebase) => (dispatch, getState, { get
     email: newUser.email,
     uoa: newUser.uoa
   })).then(() => {
-    /*
-    NEED AN ACTUAL DOMAIN NAME IN actionCodeSettings -> cant be just '/'
-    firebase.auth().sendSignInLinkToEmail(newUser.email, actionCodeSettings)
-    .then(function() {
-      // The link was successfully sent. Inform the user.
-      // Save the email locally so you don't need to ask the user for it again
-      // if they open the link on the same device.
-      window.localStorage.setItem('emailForSignIn', newUser.email);
-    })
-    .catch((err) => {
-      // Some error occurred, you can inspect the code: error.code
-      console.log("Email auth error: " + err);
-    });
-    */
     dispatch(actionCreators.registerSuccess);
+    retrieveCompanies()(dispatch, getState, { getFirestore });
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        fetchUserInfo(user.uid)(dispatch, getState, { getFirestore });
+      }
+    });
   }).catch((err) => {
     dispatch(actionCreators.registerError);
   });
