@@ -6,10 +6,48 @@ import { firestoreConnect } from 'react-redux-firebase';
 
 import { updateDataCollection, retrieveCompanies } from '../../store/asynchHandler.js';
 
+/*
+    database architecture:
+        collections:
+            data:
+                documents:
+                    market:
+                        companies: array of objects
+                            each object have fields:
+                                industry: string
+                                ipo_year: string
+                                market_cap: string
+                                name: string
+                                sector: string
+                                ticker: string
+                                uid: string
+                        sectors: array of strings
+            users:
+                documents:
+                    each user document:
+                        email: string
+                        firstName: string
+                        initials: string
+                        lastName: string
+                        uoa: array of objects
+                            each object have fields:
+                                date: string
+                                deets: string
+                                expiry: string
+                                order: string
+                                premium: number
+                                spot: number
+                                strike: number
+                                ticker: string
+                                type: string
+                                uid: string
+                        username: string
+*/
+
 class Test extends Component {
     state = {
         data: [],
-        sectors: new Map()
+        sectors: new Map()      // originally maps sector to an array of industries
     }
 
     importData = () => {
@@ -31,12 +69,30 @@ class Test extends Component {
                     }
                     this.state.data.push(company);
                     this.state.sectors.set(company.sector, 0);
+                    /*
+                    let industries = this.state.sectors.get(company.sector);
+                    if(industries === undefined)   // if the industries array is not defined and not initialized
+                        this.state.sectors.set(company.sector, []);
+                    else {
+                        industries.push(company.industry);
+                        this.state.sectors.set(company.sector, industries);
+                    }
+                    */
                 }
                 this.sortByTicker();
                 console.log(this.state.data);
             }
             reader.readAsText(fileUpload.files[0]);
         }
+    }
+
+    compare = (item1, item2) => {
+        if(item1 < item2)
+            return -1;
+        else if(item1 > item2)
+            return 1;
+        else
+            return 0;
     }
 
     compareTickers = (item1, item2) => {
@@ -48,17 +104,17 @@ class Test extends Component {
             return 0;
     }
 
-    compareSectors = (item1, item2) => {
-        if(item1 < item2)
-            return -1;
-        else if(item1 > item2)
-            return 1;
-        else
-            return 0;
-    }
-
     sortByTicker = () => {
         this.state.data.sort(this.compareTickers);
+    }
+
+    // precondition: sorted
+    removeDuplicates = (arr) => {
+        for(let i = arr.length - 1; i >= 0; i--) {
+            if(arr[i] === arr[i-1])
+                arr.splice(i, 1);
+        }
+        return arr;
     }
 
     uploadDataToDataCollection = () => {
@@ -68,9 +124,19 @@ class Test extends Component {
             if(current.uid === prev.uid)
                 this.state.data.splice(i, 1);
         }
-        console.log(this.state.data.length);
-        console.log(Array.from(this.state.sectors.keys()).sort(this.compareSectors));
-        this.props.updateDataCollection(this.state.data, Array.from(this.state.sectors.keys()).sort(this.compareSectors));
+        /*
+        // sort and remove duplicate values in the industries array
+        for(const [key, value] of this.state.sectors.entries()) {
+            let dataArr = value;
+            dataArr.sort(this.compare);
+            let finalArr = this.removeDuplicates(dataArr);
+            this.state.sectors.set(key, finalArr);
+        }
+
+        console.log(Array.from(this.state.sectors.keys()));
+        console.log(Array.from(this.state.sectors.values()));
+        */
+        this.props.updateDataCollection(this.state.data, Array.from(this.state.sectors.keys()).sort(this.compare));
     }
 
     loadData = () => {
@@ -114,8 +180,6 @@ class Test extends Component {
                     <input type="file" id="ticker_data"></input><br/>
                     <button onClick={this.importData}>Import</button><br/>
                     <button onClick={this.uploadDataToDataCollection}>Update DB in data collection</button><br/><br/><br/>
-                    <button onClick={this.loadData}>Load</button>
-                    <button onClick={this.exportData}>Export</button>
                 </div>)
         } else {
             return (

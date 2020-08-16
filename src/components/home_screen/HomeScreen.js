@@ -6,6 +6,11 @@ import { firestoreConnect } from 'react-redux-firebase';
 
 import { APP_SCREEN } from '../../store/constants';
 import { updateScreen } from '../../store/actionCreators';
+import CanvasJSReact from '../canvasjs/canvasjs.react';
+import { round } from 'lodash';
+import SectorLinks from './SectorLinks';
+// var CanvasJS = CanvasJSReact.CanvasJS;
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 /*
     comments on localstorage
@@ -25,9 +30,10 @@ class HomeScreen extends Component {
                 a. round up every option flow, identify its sector, and add the premium to the sector total
     */
     state = {
-        tickersPremiumMap: [],
-        sectors: new Map(),
-        map: []     // associative array: maps ticker to ticker info
+        sectors: new Map(),             // maps sectors to total premium
+        percentage: new Map(),          // maps sectors to premium's percentage total
+        total_premium: 0,
+        sectorsToIndustries: new Map()  // maps sectors to a map of industries to total premium
     }
 
     componentDidMount = () => {
@@ -35,21 +41,28 @@ class HomeScreen extends Component {
 
         // initialize the sectors map with value (premium) at 0
         this.props.sectors.forEach(sector => {
-            this.state.sectors.set(sector, 0);
+            if(sector !== "Miscellaneous" && sector !=="n/a") {
+                this.state.sectors.set(sector, 0);
+
+                //this.state.sectorsToIndustries.set(sectors, new Map());
+            }
         });
 
         // loop through each flow
-        let na_count = 0;
+        let premium = 0;
         this.props.uoa.forEach(flow => {
             let index = this.binarySearchString(flow.ticker);
             if(index > -1) {
                 let company = this.props.tickers[index];
-                this.state.sectors.set(company.sector, parseInt(this.state.sectors.get(company.sector)) + parseInt(flow.premium));
-            } else {
-                na_count += 1;
+                if(company.sector !== "Miscellaneous" && company.sector !=="n/a") {
+                    this.state.sectors.set(company.sector, parseInt(this.state.sectors.get(company.sector)) + parseInt(flow.premium));
+                    premium += parseInt(flow.premium);
+
+
+                }
             }
         });
-        console.log(na_count);
+        this.setState({total_premium: premium});
     }
 
     binarySearchString = (target) => {
@@ -73,14 +86,53 @@ class HomeScreen extends Component {
             return <Redirect to="/login" />;
         }
 
+        let pie_data = [];
+        for(const [key, value] of this.state.sectors.entries()) {
+            let percent = round((value / this.state.total_premium) * 100);
+            this.state.percentage.set(key, percent);
+            let data_point = {
+                y: percent,
+                label: key
+            };
+            pie_data.push(data_point);
+        }
+        console.log(pie_data);
+
+        const options = {
+            theme: "dark2",
+			animationEnabled: true,
+			exportFileName: "sector_breakdown",
+			exportEnabled: true,
+			title:{
+				text: "Sector Breakdown by Total Premium"
+			},
+			data: [{
+                type: "pie",
+                startAngle: 75,
+				toolTipContent: "<b>{label}</b>: {y}%",
+				indexLabelFontSize: 16,
+				indexLabel: "{label} - {y}%",
+				dataPoints: pie_data
+			}]
+		}
+
         return (
             <div className="dashboard container">
-                <h4>Welcome, { this.props.username }.</h4>
-                <br/>
-                <h3>PLACEHOLDER - {this.props.uoa.length}</h3>
-                <h5>
-                    Current issues at hand:<br/>
-                </h5>
+                <div className="left-panel">
+                    <h5>Welcome, { this.props.username }.</h5>
+                    <div><CanvasJSChart options = {options} /* onRef={ref => this.chart = ref} */ /></div>
+                    <div>
+                        Idea:<br/>
+                        keep this side of the page fixed<br/>
+                        let the other side expand as each user click on a sector and scroll<br/>
+                        let the chart change to a specific ticker's chart when clicked<br/>
+                        and this area here where the idea is will change to texts analyzing this ticker
+                    </div>
+                </div>
+
+                <div className="right-panel">
+                    <SectorLinks sectors={this.state.sectors} percentage={this.state.percentage} />
+                </div>
             </div>
         );
     }

@@ -447,14 +447,14 @@ class UoaScreen extends Component {
                         </div>
                         <div className="modal-field">
                             <select className="dropdown" name="type" id="select_type" defaultValue={'DEFAULT'} onChange={this.handleChange}>
-                                <option value="" value="DEFAULT" disabled>Select option type</option>
+                                <option value="DEFAULT" disabled>Select option type</option>
                                 <option value="calls">Calls</option>
                                 <option value="puts">Puts</option>
                             </select>
                         </div>
                         <div className="modal-field">
                             <select className="dropdown" name="order" id="select_order" defaultValue={'DEFAULT'} onChange={this.handleChange}>
-                                <option value="" value="DEFAULT" disabled>Select order type</option>
+                                <option value="DEFAULT" disabled>Select order type</option>
                                 <option value="sweep">Sweep</option>
                                 <option value="block">Block</option>
                                 <option value="split">Split</option>

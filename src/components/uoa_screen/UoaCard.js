@@ -13,7 +13,7 @@ class UoaCard extends Component {
             premium = premium / 1000000 + "M";
 
         return (
-            <div className="card z-depth-0">
+            <div className="card flow-card z-depth-0">
                 <div className="card-content">
                     <div className="option_icon"><span role="img" aria-label="logo">&#128142;</span></div>
                     <div className="option_date">{this.props.option.date}</div>

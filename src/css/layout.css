@@ -194,7 +194,7 @@ button:active {
     background-color: #191919;
 }
 
-.card:hover {
+.flow-card:hover {
     font-size: 115%;
 }
 
@@ -299,4 +299,37 @@ button:active {
     width: 50%; /* Full width */
     height: 30%; /* Full height */
     left: 20%;
+}
+
+.left-panel {
+    float: left;
+    width: 50%;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.right-panel {
+    float: right;
+    width: 50%;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.sector-wrapper {
+    padding-left: 10%;
+}
+
+.sector-card {
+    font-size: 125%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sector-links-wrapper {
+    padding-top: 8%;
+}
+
+.sector-card:hover {
+    cursor: pointer;
 }
