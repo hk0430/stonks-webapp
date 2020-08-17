@@ -6,9 +6,10 @@ import { firestoreConnect } from 'react-redux-firebase';
 
 class CompanyLinks extends Component {
     render() {
+        let { companies } = this.props;
         return (
             <div className="sector-links-wrapper">
-                
+                {companies}
             </div>
         );
     }

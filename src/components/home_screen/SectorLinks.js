@@ -16,6 +16,7 @@ class SectorLinks extends Component {
                             premium={premium[index]}
                             sector={value}
                             percentage={percentage[index]}
+                            companies={this.props.companies[index]}
                         />
                     );})
                 }

@@ -21,19 +21,43 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 class HomeScreen extends Component {
     /*
-        data structures needed:
-            -> an object (A) that maps a sector name to another object (B), which contains all the companies in that sector and the total premium in that sector
-                -> each object (B) shall contain 
-
-        what to display:
-            1. a pie chart showing how much money is in each sector
-                a. round up every option flow, identify its sector, and add the premium to the sector total
+         what to display:
+            1. left side top: a pie chart showing how much money is in each sector
+            2. right side: a table that shows each sector and how much money is in each sector, complementing the information in the chart
+                a. each sector card is also clickable and expandable
+                    after expanding, it will show a table similar to which it is nested within, showing each company in this sector and how much premium is invested in it
+            3. left side bottom (boxed): complementing the right side table will be a small table with the following information:
+                a. company name and ticker, industry, market cap
+                b. short term, mid term, and long term sentiment calculated based on total premium, expiration dates, and call-put ratio
+                    i. term sentiment shall have 5 values: extremely bullish, bullish, neutral, bearish, and extremely bearish
+        
+        COMPANY MAP OBJECT = {
+            sector
+            industry
+            market cap
+            # of 30 day puts contracts
+            # of 30 day calls contracts
+            $ of 30 day puts contracts
+            $ of 30 day calls contracts
+            # of 180 day puts contracts
+            # of 180 day calls contracts
+            $ of 180 day puts contracts
+            $ of 180 day calls contracts
+            # of 180+ day puts contracts
+            # of 180+ day calls contracts
+            $ of 180+ day puts contracts
+            $ of 180+ day calls contracts
+        }
+        # used to calculate put/call ratio
+        $ used to calculate put/call premium ratio
+        both combined will be used to determine sentiment for the 3 time periods
     */
     state = {
         sectors: new Map(),             // maps sectors to total premium
         percentage: new Map(),          // maps sectors to premium's percentage total
-        total_premium: 0,
-        sectorsToIndustries: new Map()  // maps sectors to a map of industries to total premium
+        companies: new Map(),           // maps a company to an object of information SEE COMPANY MAP OBJECT ABOVE
+        loading: true,
+        pie_data: []
     }
 
     componentDidMount = () => {
@@ -41,11 +65,8 @@ class HomeScreen extends Component {
 
         // initialize the sectors map with value (premium) at 0
         this.props.sectors.forEach(sector => {
-            if(sector !== "Miscellaneous" && sector !=="n/a") {
+            if(sector !== "Miscellaneous" && sector !=="n/a")
                 this.state.sectors.set(sector, 0);
-
-                //this.state.sectorsToIndustries.set(sectors, new Map());
-            }
         });
 
         // loop through each flow
@@ -57,12 +78,20 @@ class HomeScreen extends Component {
                 if(company.sector !== "Miscellaneous" && company.sector !=="n/a") {
                     this.state.sectors.set(company.sector, parseInt(this.state.sectors.get(company.sector)) + parseInt(flow.premium));
                     premium += parseInt(flow.premium);
-
-
                 }
             }
         });
-        this.setState({total_premium: premium});
+        let pie_data = [];
+        for(const [key, value] of this.state.sectors.entries()) {
+            let percent = round((value / premium) * 100);
+            this.state.percentage.set(key, percent);
+            let data_point = {
+                y: percent,
+                label: key
+            };
+            pie_data.push(data_point);
+        }
+        this.setState({pie_data: pie_data});
     }
 
     binarySearchString = (target) => {
@@ -81,22 +110,19 @@ class HomeScreen extends Component {
         return -1; 
     }
 
+    /* 
+        get the time in days between 2 dates
+        @param date1 Date object
+        @param date2 Date object
+    */
+    differenceBetweenDates = (date1, date2) => {
+        return (Math.abs(date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
+    }
+
     render() {
         if(!this.props.auth.uid) {
             return <Redirect to="/login" />;
         }
-
-        let pie_data = [];
-        for(const [key, value] of this.state.sectors.entries()) {
-            let percent = round((value / this.state.total_premium) * 100);
-            this.state.percentage.set(key, percent);
-            let data_point = {
-                y: percent,
-                label: key
-            };
-            pie_data.push(data_point);
-        }
-        console.log(pie_data);
 
         const options = {
             theme: "dark2",
@@ -112,10 +138,10 @@ class HomeScreen extends Component {
 				toolTipContent: "<b>{label}</b>: {y}%",
 				indexLabelFontSize: 16,
 				indexLabel: "{label} - {y}%",
-				dataPoints: pie_data
+				dataPoints: this.state.pie_data
 			}]
-		}
-
+        }
+        
         return (
             <div className="dashboard container">
                 <div className="left-panel">
@@ -126,12 +152,20 @@ class HomeScreen extends Component {
                         keep this side of the page fixed<br/>
                         let the other side expand as each user click on a sector and scroll<br/>
                         let the chart change to a specific ticker's chart when clicked<br/>
-                        and this area here where the idea is will change to texts analyzing this ticker
+                        and this area here where the idea is will change to texts analyzing this ticker<br/>
+                        analysis of company:<br/>
+                            calculate the days til expiration of each flow and see what range it falls into<br/>
+                            30 days outlook<br/>
+                            180 days months outlook<br/>
+                            365 days and beyond outlook<br/>
+                        provide an overall sentiment for the short term, mid term, and long term based on premium flow
+                        <br/><br/>
+                        finally, get a loading screen done
                     </div>
                 </div>
 
                 <div className="right-panel">
-                    <SectorLinks sectors={this.state.sectors} percentage={this.state.percentage} />
+                    <SectorLinks sectors={this.state.sectors} percentage={this.state.percentage} companies={this.state.companies} />
                 </div>
             </div>
         );

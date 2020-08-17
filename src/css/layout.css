@@ -320,7 +320,7 @@ button:active {
 }
 
 .sector-card {
-    font-size: 125%;
+    font-size: 160%;
     width: 100%;
     display: flex;
     justify-content: space-between;

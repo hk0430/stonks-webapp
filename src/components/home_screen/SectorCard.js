@@ -22,7 +22,7 @@ class SectorCard extends Component {
                 </div>
                 <Expand open={this.state.open}>
                     <div>Yeet</div>
-                    <CompanyLinks />
+                    <CompanyLinks companies={this.props.companies} />
                 </Expand>
             </div>
         );
