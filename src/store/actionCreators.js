@@ -14,6 +14,7 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const SCREEN_CHANGE = 'SCREEN_CHANGE';
 export const CURRENT_USER_UPDATE = 'CURRENT_USER_UPDATE';
 export const RETRIEVE_COMPANIES = 'RETRIEVE_COMPANIES';
+export const UPDATE_TICKER_ANALYSIS = 'UPDATE_TICKER_ANALYSIS';
 
 export const registerSuccess = () => {
     return { type: REGISTER_SUCCESS }
@@ -33,6 +34,12 @@ export const logoutSuccess = () => {
 
 export const updateScreen = newScreen => {
     return (dispatch) => {
-        dispatch( { type: SCREEN_CHANGE, payload: newScreen });
+        dispatch({ type: SCREEN_CHANGE, payload: newScreen });
     }
 };
+
+export const showAnalysis = (ticker, analysis) => {
+    return (dispatch) => {
+        dispatch({ type: UPDATE_TICKER_ANALYSIS, ticker: ticker, analysis: analysis })
+    }
+}

@@ -14,6 +14,7 @@ class SectorCard extends Component {
 
     render() {
         let premium_in_mil = (this.props.premium / 1000000).toFixed(2) + 'M';
+
         return (
             <div className="card sector-wrapper z-depth-0">
                 <div className="sector-card" onClick={this.toggle}>
@@ -21,8 +22,7 @@ class SectorCard extends Component {
                     <span>{premium_in_mil} ({this.props.percentage}%)</span>
                 </div>
                 <Expand open={this.state.open}>
-                    <div>Yeet</div>
-                    <CompanyLinks companies={this.props.companies} />
+                    <CompanyLinks companies={this.props.companies} companies_in_this_sector={Array.from(this.props.sectors_to_companies.get(this.props.sector))} />
                 </Expand>
             </div>
         );

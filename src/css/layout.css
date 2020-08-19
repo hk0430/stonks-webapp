@@ -333,3 +333,26 @@ button:active {
 .sector-card:hover {
     cursor: pointer;
 }
+
+.company-card:hover {
+    cursor: pointer;
+}
+
+.company-card {
+    left: 5%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.analysis-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.analysis-wrapper {
+    margin-top: 3%;
+    border: thin dotted silver;
+    padding: 5px;
+}

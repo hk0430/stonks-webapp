@@ -5,11 +5,19 @@ const initState = {
     currentUsername: '',
     currentUoa: [],
     tickers: [],
-    sectors: []
+    sectors: [],
+    ticker_analyzed: '',
+    analysis: {}
 };
 
 const stateReducer = (state = initState, action) => {
     switch (action.type) {
+        case actionCreators.UPDATE_TICKER_ANALYSIS:
+            return {
+                ...state,
+                ticker_analyzed: action.ticker,
+                analysis: action.analysis
+            }
         case actionCreators.RETRIEVE_COMPANIES:
             return {
                 ...state,
