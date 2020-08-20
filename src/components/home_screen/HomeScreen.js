@@ -71,13 +71,18 @@ class HomeScreen extends Component {
         percentage: new Map(),          // maps sectors to premium's percentage total
         companies: new Map(),           // maps a company to an object of information SEE COMPANY MAP OBJECT ABOVE
         sectors_to_companies: new Map(),    // maps a sector to an array of company tickers (keys for the companies array, key is the company ticker)
-        loading: true,
+        loading: false,
         pie_data: []
     }
     
     componentDidMount = () => {
         this.props.updateScreen(APP_SCREEN.LOGIN_SCREEN);
         this.props.showAnalysis('', null);
+
+        if(this.props.fresh_login) {
+            this.setState({loading: true});
+            this.props.loginDataFetched();
+        }
 
         // initialize the sectors map with value (premium) at 0
         this.props.sectors.forEach(sector => {
@@ -171,7 +176,6 @@ class HomeScreen extends Component {
                 pie_data.push(data_point);
         }
         this.setState({pie_data: pie_data});
-        this.setState({loading: false}, () => { console.log(this.props.uoa) });
     }
 
     binarySearchString = (target) => {
@@ -257,6 +261,8 @@ class HomeScreen extends Component {
             }
         }
 
+        console.log(this.props.uoa);
+
         return (
             this.state.loading ?
             <div className="loading"><Eclipse size={64} /></div> :
@@ -300,6 +306,7 @@ class HomeScreen extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.firebase.auth,
+        fresh_login: state.auth.fresh_login,
         username: state.manager.currentUsername,
         uoa: state.manager.currentUoa,
         tickers: state.manager.tickers,
