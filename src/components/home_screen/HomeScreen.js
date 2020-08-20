@@ -98,6 +98,8 @@ class HomeScreen extends Component {
                     premium += parseInt(flow.premium);
 
                     if(this.state.companies.get(company.ticker) === undefined) {
+                        console.log('hello?');
+                        console.log(company.ticker);
                         let company_info = {
                             sector: company.sector,
                             industry: company.industry,
@@ -116,37 +118,37 @@ class HomeScreen extends Component {
                             premium_long_calls: 0
                         }
                         this.state.companies.set(company.ticker, company_info);
-                    } else {
-                        let company_info = this.state.companies.get(company.ticker);
-                        let type = flow.type;
-                        let num_options = parseInt(flow.deets.split("@")[0]);
-                        let money = parseInt(flow.premium);
-                        let expiry = flow.expiry.split("-");
-                        let days = this.differenceBetweenDates(new Date(), new Date(parseInt(expiry[0]), parseInt(expiry[1]), parseInt(expiry[2])));
-                        if(days <= 30) {
-                            if(type === "calls") {
-                                company_info.num_30d_calls += num_options;
-                                company_info.premium_30d_calls += money;
-                            } else {
-                                company_info.num_30d_puts += num_options;
-                                company_info.premium_30d_puts += money;
-                            }
-                        } else if(days > 30 && days <= 180) {
-                            if(type === "calls") {
-                                company_info.num_180d_calls += num_options;
-                                company_info.premium_180d_calls += money;
-                            } else {
-                                company_info.num_180d_puts += num_options;
-                                company_info.premium_180d_puts += money;
-                            }
+                    }
+                    let company_info = this.state.companies.get(company.ticker);
+                    let type = flow.type;
+                    let num_options = parseInt(flow.deets.split("@")[0]);
+                    let money = parseInt(flow.premium);
+                    let expiry = flow.expiry.split("-");
+                    console.log('here');
+                    let days = this.differenceBetweenDates(new Date(), new Date(parseInt(expiry[0]), parseInt(expiry[1]), parseInt(expiry[2]), 8, 0, 0, 0));
+                    if(days <= 30) {
+                        if(type === "calls") {
+                            company_info.num_30d_calls += num_options;
+                            company_info.premium_30d_calls += money;
                         } else {
-                            if(type === "calls") {
-                                company_info.num_long_calls += num_options;
-                                company_info.premium_long_calls += money;
-                            } else {
-                                company_info.num_long_puts += num_options;
-                                company_info.premium_long_puts += money;
-                            }
+                            company_info.num_30d_puts += num_options;
+                            company_info.premium_30d_puts += money;
+                        }
+                    } else if(days > 30 && days <= 180) {
+                        if(type === "calls") {
+                            company_info.num_180d_calls += num_options;
+                            company_info.premium_180d_calls += money;
+                        } else {
+                            company_info.num_180d_puts += num_options;
+                            company_info.premium_180d_puts += money;
+                        }
+                    } else {
+                        if(type === "calls") {
+                            company_info.num_long_calls += num_options;
+                            company_info.premium_long_calls += money;
+                        } else {
+                            company_info.num_long_puts += num_options;
+                            company_info.premium_long_puts += money;
                         }
                     }
                 }
@@ -194,6 +196,8 @@ class HomeScreen extends Component {
         @param date2 Date object
     */
     differenceBetweenDates = (date1, date2) => {
+        console.log(date1);
+        console.log(date2);
         return (Math.abs(date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
     }
 
@@ -220,7 +224,22 @@ class HomeScreen extends Component {
 			}]
         }
 
-        console.log(this.props.ticker_analyzed);
+        let analysis = this.props.analysis;
+        if(analysis === null) {
+            analysis = {
+                ticker: '',
+                sector: '',
+                industry: '',
+                market_cap: '',
+                short_term_sentiment: '',
+                short_term_pc_ratio: '',
+                mid_term_sentiment: '',
+                mid_term_pc_ratio: '',
+                long_term_sentiment: '',
+                long_term_pc_ratio: '',
+                overall_rating: ''
+            }
+        }
 
         return (
             <div className="dashboard container">
@@ -228,17 +247,16 @@ class HomeScreen extends Component {
                     <h5>Welcome, { this.props.username }.</h5>
                     <div><CanvasJSChart options = {options} /* onRef={ref => this.chart = ref} */ /></div>
                     <div className="analysis-wrapper">
-                        <div className="analysis-info"><span>Ticker:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Sector:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Industry:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Market Cap:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Short Term Sentiment:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Short Term P/C Ratio:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Mid Term Sentiment:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Mid Term P/C Ratio:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Long Term Sentiment:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Long Term P/C Ratio:</span><span>PLACEHOLDER</span></div>
-                        <div className="analysis-info"><span>Overall Rating:</span><span>PLACEHOLDER</span></div>
+                        <div className="analysis-info"><span>Ticker:</span><span>{analysis.ticker}</span></div>
+                        <div className="analysis-info"><span>Sector:</span><span>{analysis.sector}</span></div>
+                        <div className="analysis-info"><span>Industry:</span><span>{analysis.industry}</span></div>
+                        <div className="analysis-info"><span>Market Cap:</span><span>{analysis.market_cap}</span></div>
+                        <div className="analysis-info"><span>Short Term Sentiment:</span><span>{analysis.short_term_sentiment}</span></div>
+                        <div className="analysis-info"><span>Short Term P/C Ratio:</span><span>{analysis.short_term_pc_ratio}</span></div>
+                        <div className="analysis-info"><span>Mid Term Sentiment:</span><span>{analysis.mid_term_sentiment}</span></div>
+                        <div className="analysis-info"><span>Mid Term P/C Ratio:</span><span>{analysis.mid_term_pc_ratio}</span></div>
+                        <div className="analysis-info"><span>Long Term Sentiment:</span><span>{analysis.long_term_sentiment}</span></div>
+                        <div className="analysis-info"><span>Long Term P/C Ratio:</span><span>{analysis.long_term_pc_ratio}</span></div>
                     </div>
                 </div>
 
@@ -262,7 +280,8 @@ const mapStateToProps = state => {
         uoa: state.manager.currentUoa,
         tickers: state.manager.tickers,
         sectors: state.manager.sectors,
-        ticker_analyzed: state.manager.ticker_analyzed
+        ticker_analyzed: state.manager.ticker_analyzed,
+        analysis: state.manager.analysis
     };
 };
 

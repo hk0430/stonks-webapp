@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 
 import { showAnalysis } from '../../store/actionCreators';
-import { STOCK_SENTIMENT_SCALE } from '../../store/constants';
+import { STOCK_SENTIMENT_SCALE, STOCK_SENTIMENT } from '../../store/constants';
 
 class CompanyCard extends Component {
     /*
@@ -20,6 +20,7 @@ class CompanyCard extends Component {
     */
     analyze = () => {
         let data = this.props.company_info;
+        console.log(data);
 
         let analysis = {
             ticker: this.props.ticker,
@@ -35,29 +36,53 @@ class CompanyCard extends Component {
             overall_rating: ''
         }
 
-        let st_pc_ratio = data.num_30d_puts / data.num_30d_calls;
-        if(isNaN(st_pc_ratio)) st_pc_ratio = Infinity;
+        let st_pc_ratio = this.calculate_pc_ratio(data.num_30d_puts, data.num_30d_calls);
         analysis.short_term_pc_ratio = st_pc_ratio;
+        analysis.short_term_sentiment = this.calculate_sentiment(st_pc_ratio);
 
-        let mt_pc_ratio = data.num_180d_puts / data.num_180d_calls;
-        if(isNaN(mt_pc_ratio)) mt_pc_ratio = Infinity;
+        let mt_pc_ratio = this.calculate_pc_ratio(data.num_180d_puts, data.num_180d_calls);
         analysis.mid_term_pc_ratio = mt_pc_ratio;
+        analysis.mid_term_sentiment = this.calculate_sentiment(mt_pc_ratio);
 
-        let lt_pc_ratio = data.num_long_puts / data.num_long_calls;
-        if(isNaN(lt_pc_ratio)) lt_pc_ratio = Infinity;
+        let lt_pc_ratio = this.calculate_pc_ratio(data.num_long_puts, data.num_long_calls);
         analysis.long_term_pc_ratio = lt_pc_ratio;
+        analysis.long_term_sentiment = this.calculate_sentiment(lt_pc_ratio);
 
         this.props.showAnalysis(this.props.ticker, analysis);
     }
 
-    calculate_sentiment = ratio => {
-        if(ratio >= 0 && ratio <= 0.3)  return STOCK_SENTIMENT_SCALE.EXTREMELY_BULLISH;
-        else if(ratio > 0.3 && ratio <= 0.7)    return STOCK_SENTIMENT_SCALE.BULLISH;
-        else if(ratio > 0.7 && ratio < 1.3) return STOCK_SENTIMENT_SCALE.NEUTRAL;
-        else if(ratio >= 1.3 && ratio < 2)  return STOCK_SENTIMENT_SCALE.BEARISH;
-        else    return STOCK_SENTIMENT_SCALE.EXTREMELY_BEARISH;
+    calculate_pc_ratio = (puts, calls) => {
+        if(puts === 0 && calls === 0)    return "NO DATA AVAILABLE";
+        if(calls === 0)  return Infinity;
+        return (puts / calls).toFixed(3);
     }
 
+    calculate_sentiment_score = ratio => {
+        if(ratio >= 0 && ratio <= 0.3)  return STOCK_SENTIMENT_SCALE.EXTREMELY_BULLISH;
+        if(ratio > 0.3 && ratio <= 0.7)    return STOCK_SENTIMENT_SCALE.BULLISH;
+        if(ratio > 0.7 && ratio < 1.3) return STOCK_SENTIMENT_SCALE.NEUTRAL;
+        if(ratio >= 1.3 && ratio < 2)  return STOCK_SENTIMENT_SCALE.BEARISH;
+        return STOCK_SENTIMENT_SCALE.EXTREMELY_BEARISH;
+    }
+
+    calculate_sentiment = ratio => {
+        if(ratio === "NO DATA AVAILABLE")   return ratio;
+        if(ratio >= 0 && ratio <= 0.3)  return STOCK_SENTIMENT.EXTREMELY_BULLISH;
+        if(ratio > 0.3 && ratio <= 0.7)    return STOCK_SENTIMENT.BULLISH;
+        if(ratio > 0.7 && ratio < 1.3) return STOCK_SENTIMENT.NEUTRAL;
+        if(ratio >= 1.3 && ratio < 2)  return STOCK_SENTIMENT.BEARISH;
+        return STOCK_SENTIMENT.EXTREMELY_BEARISH;
+    }
+    /*
+    calculate_sentiment = (pc_ratio, premium_ratio) => {
+        let ratio = (pc_ratio * 0.7 + premium_ratio * 0.3);
+        if(ratio >= 0 && ratio <= 0.3)  return STOCK_SENTIMENT.EXTREMELY_BULLISH;
+        if(ratio > 0.3 && ratio <= 0.7)    return STOCK_SENTIMENT.BULLISH;
+        if(ratio > 0.7 && ratio < 1.3) return STOCK_SENTIMENT.NEUTRAL;
+        if(ratio >= 1.3 && ratio < 2)  return STOCK_SENTIMENT.BEARISH;
+        return STOCK_SENTIMENT.EXTREMELY_BEARISH;
+    }
+    */
     render() {
         return (
             <div className="card company-card z-depth-0" onClick={this.analyze}>
