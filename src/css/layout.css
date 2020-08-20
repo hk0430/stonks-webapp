@@ -356,3 +356,8 @@ button:active {
     border: thin dotted silver;
     padding: 5px;
 }
+
+.loading {
+    text-align: center;
+    margin-top: 20%;
+}

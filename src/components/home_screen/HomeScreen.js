@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { firestoreConnect } from 'react-redux-firebase';
 
+import { Eclipse } from "react-loading-io";
 import { APP_SCREEN } from '../../store/constants';
 import { updateScreen, showAnalysis } from '../../store/actionCreators';
 import CanvasJSReact from '../canvasjs/canvasjs.react';
@@ -159,7 +160,6 @@ class HomeScreen extends Component {
         }
 
         let pie_data = [];
-        console.log(this.state.sectors);
         for(const [key, value] of this.state.sectors.entries()) {
             let percent = round((value / premium) * 100);
             this.state.percentage.set(key, percent);
@@ -171,6 +171,7 @@ class HomeScreen extends Component {
                 pie_data.push(data_point);
         }
         this.setState({pie_data: pie_data});
+        this.setState({loading: false}, () => { console.log(this.props.uoa) });
     }
 
     binarySearchString = (target) => {
@@ -257,6 +258,8 @@ class HomeScreen extends Component {
         }
 
         return (
+            this.state.loading ?
+            <div className="loading"><Eclipse size={64} /></div> :
             <div className="dashboard container">
                 <div className="left-panel">
                     <h5>Welcome, { this.props.username }.</h5>
