@@ -98,8 +98,6 @@ class HomeScreen extends Component {
                     premium += parseInt(flow.premium);
 
                     if(this.state.companies.get(company.ticker) === undefined) {
-                        console.log('hello?');
-                        console.log(company.ticker);
                         let company_info = {
                             sector: company.sector,
                             industry: company.industry,
@@ -124,9 +122,8 @@ class HomeScreen extends Component {
                     let num_options = parseInt(flow.deets.split("@")[0]);
                     let money = parseInt(flow.premium);
                     let expiry = flow.expiry.split("-");
-                    console.log('here');
-                    let days = this.differenceBetweenDates(new Date(), new Date(parseInt(expiry[0]), parseInt(expiry[1]), parseInt(expiry[2]), 8, 0, 0, 0));
-                    if(days <= 30) {
+                    let days = this.differenceBetweenDates(new Date(parseInt(expiry[0]), parseInt(expiry[1])-1, parseInt(expiry[2]), 8, 0, 0, 0), new Date());
+                    if(days > 0 && days <= 30) {
                         if(type === "calls") {
                             company_info.num_30d_calls += num_options;
                             company_info.premium_30d_calls += money;
@@ -142,7 +139,7 @@ class HomeScreen extends Component {
                             company_info.num_180d_puts += num_options;
                             company_info.premium_180d_puts += money;
                         }
-                    } else {
+                    } else if(days > 180) {
                         if(type === "calls") {
                             company_info.num_long_calls += num_options;
                             company_info.premium_long_calls += money;
@@ -162,6 +159,7 @@ class HomeScreen extends Component {
         }
 
         let pie_data = [];
+        console.log(this.state.sectors);
         for(const [key, value] of this.state.sectors.entries()) {
             let percent = round((value / premium) * 100);
             this.state.percentage.set(key, percent);
@@ -169,7 +167,8 @@ class HomeScreen extends Component {
                 y: percent,
                 label: key
             };
-            pie_data.push(data_point);
+            if(data_point.y > 0)
+                pie_data.push(data_point);
         }
         this.setState({pie_data: pie_data});
     }
@@ -196,9 +195,7 @@ class HomeScreen extends Component {
         @param date2 Date object
     */
     differenceBetweenDates = (date1, date2) => {
-        console.log(date1);
-        console.log(date2);
-        return (Math.abs(date1.getTime() - date2.getTime()) / (1000 * 3600 * 24));
+        return (date1.getTime() - date2.getTime()) / (1000 * 3600 * 24);
     }
 
     render() {
@@ -224,6 +221,24 @@ class HomeScreen extends Component {
 			}]
         }
 
+        const null_option = {
+            theme: "dark2",
+			animationEnabled: true,
+			exportFileName: "sector_breakdown",
+			exportEnabled: true,
+			title:{
+				text: "Sector Breakdown by Total Premium"
+			},
+			data: [{
+                type: "pie",
+                startAngle: 75,
+				toolTipContent: "<b>{label}</b>: {y}%",
+				indexLabelFontSize: 16,
+				indexLabel: "{label} - {y}%",
+				dataPoints: [{y: 100, label: "No Data"}]
+			}]
+        }
+
         let analysis = this.props.analysis;
         if(analysis === null) {
             analysis = {
@@ -245,7 +260,13 @@ class HomeScreen extends Component {
             <div className="dashboard container">
                 <div className="left-panel">
                     <h5>Welcome, { this.props.username }.</h5>
-                    <div><CanvasJSChart options = {options} /* onRef={ref => this.chart = ref} */ /></div>
+                    <div>
+                        {
+                            this.props.uoa.length === 0 ?
+                            <CanvasJSChart options={null_option} /> :
+                            <CanvasJSChart options={options} /* onRef={ref => this.chart = ref} */ />
+                        }
+                    </div>
                     <div className="analysis-wrapper">
                         <div className="analysis-info"><span>Ticker:</span><span>{analysis.ticker}</span></div>
                         <div className="analysis-info"><span>Sector:</span><span>{analysis.sector}</span></div>

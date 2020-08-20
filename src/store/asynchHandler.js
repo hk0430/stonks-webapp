@@ -61,7 +61,6 @@ export const updateDataCollection = (companies, sectors) => (dispatch, getState,
   update the array of option flows for a specific user
 */
 export const updateUoa = (uid, newUoa) => (dispatch, getState, { getFirestore }) => {
-  console.log(newUoa);
   const fireStore = getFirestore();
   fireStore.collection('users').doc(uid).update({
     uoa: newUoa
